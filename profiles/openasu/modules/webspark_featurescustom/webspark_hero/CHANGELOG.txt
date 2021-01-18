@@ -1,3 +1,8 @@
+Webspark Hero - 7.x-1.12, 2021-01-17
+------------------------------------
+- Updated font-weight from 900 to 700 for bold output to keep Windows-based browsers from implementing
+  the Arial Black font (and break Web standards 2.0).
+
 Webspark Hero - 7.x-1.11, 2020-01-06
 -----------------------------------------
 - Text height value no longer appears over hero images.

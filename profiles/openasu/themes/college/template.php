@@ -60,7 +60,7 @@ function college_preprocess_html(&$variables) {
       '#tag' => 'meta',
       '#attributes' => array(
         // Don't forget to update openasu.info as well!!
-        'content' => 'Webspark:1.76.1 (Niceville)',
+        'content' => 'Webspark:1.76.3 (Jacksonville)',
         'http-equiv' => 'X-Name-of-Distro',
         'name' => 'cmsversion',
       )
@@ -96,6 +96,26 @@ function college_preprocess_html(&$variables) {
 
   // Add HTTP header along with meta tag for IE compatibility
   drupal_add_http_header('X-UA-Compatible', 'IE=Edge,chrome=1');
+
+
+  // Is user logged in, and if so,
+
+  $nav_heights = array();
+  if (user_is_logged_in()) {
+    if (module_exists('admin_menu') && user_access('access administration menu')) { // #admin-menu
+      $nav_heights['barbar'] = 30;
+      $nav_heights['access'] = 1;
+    } elseif (module_exists('navbar') && user_access('access navbar')) { // #navbar-bar
+      $nav_heights['barbar'] = 39;
+      $nav_heights['access'] = 1;
+    } else {
+      $nav_heights['access'] = 0;
+    }
+  } else {
+    $nav_heights['barbar'] = 0;
+    $nav_heights['access'] = 0;
+  }
+  drupal_add_js(array('asu_standards' => $nav_heights), 'setting');
 }
 
 /**

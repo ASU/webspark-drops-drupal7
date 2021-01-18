@@ -6,8 +6,8 @@
 #page-page .section > .container .row-full .pane-bundle-asu-spotlight > h1.pane-title, #page-page .section > .container .row-full .pane-bundle-asu-spotlight > h2.pane-title { margin: 0 auto; max-width: 1170px !important; }
 
 .slidecontainer { position: relative !important; }
-.slidecontainer p { margin: 0 0 1.5em 0; padding: 0; color: #fff; font-size: 1.33em; line-height: 1.33em; font-weight: 900; text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
-.slidecontainer h1, .slidecontainer h2 { color: #fff; font-size: 3.75rem; font-weight: 900; line-height: 1; margin: 0; padding: 0.625rem 0; text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
+.slidecontainer p { margin: 0 0 1.5em 0; padding: 0; color: #fff; font-size: 1.33em; line-height: 1.33em; font-weight: 700; text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
+.slidecontainer h1, .slidecontainer h2 { color: #fff; font-size: 3.75rem; font-weight: 700; line-height: 1; margin: 0; padding: 0.625rem 0; text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
 .slidecontainer h1 > a, .slidecontainer h2 > a { border-bottom: none; color: #fff; }
 
 .blurbcontainer { display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; height: auto; padding: 0.5em; width: 100%; /* Fix for IE9+; Capped below at 1170px */ max-width: 1170px; }

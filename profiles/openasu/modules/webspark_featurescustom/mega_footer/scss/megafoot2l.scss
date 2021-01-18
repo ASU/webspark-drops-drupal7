@@ -28,7 +28,7 @@
     &.megafoot-logo-social {
       border-bottom: 1px solid #333;
       #mega-footer-logo-wrapper {
-        padding: 1.5rem 0;
+        padding: 1.5rem 0 1.5rem 1rem;
         display: inline-block;
         a {
           border-bottom: 0;
@@ -179,6 +179,9 @@
         border-bottom: 1px solid #383d3e;
         padding-left: 0;
         padding-right: 0;
+      }
+      #mega-footer-logo-wrapper {
+        padding-left: 0 !important;
       }
       &.megafoot-logo-social #mega-footer-social-media {
         float: left;

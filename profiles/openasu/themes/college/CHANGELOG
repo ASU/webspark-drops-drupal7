@@ -1,3 +1,22 @@
+College (v1.2) - 2021-01-17
+---------------------------
+  - Top content of pages now visible below (vs. being hidden behind) the ASU mobile menu at mobile window
+    widths (<=992px).
+  - Removed #page-page CSS selector (which is only available in Radix Layout-based Webspark content types)
+    to correctly open WS2.0 styling up to other customized content templates/types (including webforms).
+  - Removed custom, restricted WS2.0 styling for <ul>, <ol> elements to fix random bullets from
+    various Webspark elements. (Kept separate HOWTO styling for <ol> lists.)
+  - Left-hand sidebar menu links now have corrected gold footer that was missing in some configurations.
+  - Updated font-weight from 900 to 700 for bold output to keep Windows-based browsers from implementing
+    the Arial Black font (and break Web standards 2.0).
+  - UI Tabs styling for the tabs and their content text now matches Web standards 2.0.
+    - This included a major refactoring of the SASS/CSS to separate the Quicktabs and UI Tabs selectors.
+  - Blockquotes WS2.0 styling changed to allow proper layout in columns that are not 100% wide.
+  - Updated jQuery code to utilize context parameter to improve the theme's overall speed/performance.
+  - Added README file to sites/all/themes folder that explains how to set up a subtheme for College.
+    - Also updated Innovation README in sites/all/themes folder to reflect new changes in Web standards
+      at ASU.
+
 College (v1.1) - 2020-11-30
 ---------------------------
 - Panels directory added to College config file to allow Panels layouts

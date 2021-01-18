@@ -13,17 +13,19 @@
 /* Default alternate desktop size: <= 992px */
 @media (max-width: 1199px) { .container { width: 100% !important; } }
 /* Default "Mobile size" <= 991px */
-@media (max-width: 991px) { .container { width: 100%; max-width: 992px; }
+@media (max-width: 991px) { div.region-content ul.ui-tabs-nav { overflow-x: scroll; display: flex; border-radius: 0; overflow-y: hidden; }
+  .container { width: 100%; max-width: 992px; }
   #ASUNavMenu { display: none !important; }
+  header#header { height: 0.25rem; }
   h1, .h1 { margin-bottom: 3rem; font-size: 48px; }
   h1.page-title { margin-bottom: 0; padding-bottom: 0.75rem; }
   h2, .h2 { font-size: 34px; }
   .row .col-sm-6:nth-child(3), .row .col-sm-6:nth-child(5), .row .col-sm-6:nth-child(7) { clear: both; }
+  #header a { color: #191919; }
   #header .container { width: 100%; }
   #header > .container .row { margin-left: 0; margin-right: 0; }
   #header > .container .row .col-md-12 { padding-left: 0; padding-right: 0; }
   #header .container-fluid > .row > .col-md-12 { width: 100%; }
-  #header a { color: #191919; }
   .header__sitename { font-size: 15px; padding: 12px 15px; color: #fff; background: #484848; font-weight: 600; line-height: 12px; }
   .header__sitename a { color: #fff; }
   #asu_hdr_title_gen { white-space: normal; }

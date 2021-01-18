@@ -42,16 +42,42 @@
  */
 @media (max-width: $screen-sm-max) {
 
+  // UI Tabs Mobile fixes to be in accordance with WS2.0
+  #{$ws2-content-styles-container} {
+    ul.ui-tabs-nav {
+      overflow-x: scroll;
+      display: flex;
+      border-radius: 0;
+      overflow-y: hidden;
+    }
+  }
+  //
   .container {
     width: 100%;
     max-width: $screen-md;
   }
 
-  // Swap out desktop menu
+  // Swap out desktop menu and detached, sticky mobile menu from web component
   #ASUNavMenu {
     display: none !important;
   }
+  // Create space above mobile menu for:
+  //// Navbar component.
+  body.admin-menu #main-wrapper,
+  body > nav#navbar-administration + div#page-wrapper #main-wrapper {
+    //margin-top: 5.25rem; // Moves content body down by (height of mobile menu + height of Navbar)
+  }
+  #headerContainer {
+    & > header[class*=css-] > .navbar-component {
+      //padding-top: 39px; // Height of
+    }
+  }
+  // Since mobile menu is DOM-detached, shrink header down to 4px for padding
+  header#header {
+    height: 0.25rem;
+  }
 
+  // Headers
   h1, .h1 {
     margin-bottom: 3rem;
     font-size: $font-size-h1-mobile;
@@ -69,24 +95,27 @@
   .row .col-sm-6:nth-child(7) {
     clear: both;
   }
-  #header .container {
-    width: 100%;
-  }
-  #header > .container .row {
-    margin-left: 0;
-    margin-right: 0;
-    .col-md-12 {
-      padding-left: 0;
-      padding-right: 0;
+  #header {
+    // Mobile header link color fix
+    a {
+      color: $ws2-gray-darkest;
     }
-  }
-  #header .container-fluid > .row > .col-md-12 {
-    width: 100%;
-  }
-  // Mobile header link color fix
-  #header a
-  {
-    color: $ws2-gray-darkest;
+    .container {
+      width: 100%;
+    }
+    & > .container {
+      .row {
+        margin-left: 0;
+        margin-right: 0;
+        .col-md-12 {
+          padding-left: 0;
+          padding-right: 0;
+        }
+      }
+    }
+    .container-fluid > .row > .col-md-12 {
+      width: 100%;
+    }
   }
   .header__sitename {
     font-size: 15px;
@@ -157,6 +186,7 @@
   }
 }
 
+// Print page layout fixes
 @media print {
   .megafoot > .row div:not(.megafoot-border) {
     display: none; }

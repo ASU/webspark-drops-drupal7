@@ -36,44 +36,43 @@
 
 ul.quicktabs-style-nostyle { font-size: 24px; }
 
-.ui-tabs-panel, .ui-tabs-panel p { font-size: 1em; }
+.ui-tabs-panel, .ui-tabs-panel p { font-size: 1rem; }
 
-.ui-widget-header { background: none; min-height: auto; padding: 0; color: #191919; font-size: 1.125em; font-weight: 200; line-height: 24px; }
+.ui-widget-header { background: none; min-height: auto; padding: 0; color: #191919; font-size: 1.125rem; font-weight: 200; line-height: 24px; }
 
-ul.quicktabs-style-nostyle, .ui-tabs .ui-tabs-nav { border-bottom: 1px solid #d0d0d0 !important; padding: 16px 0 0 0; }
-
-ul.quicktabs-style-nostyle { margin-bottom: 0; }
-
+.ui-tabs .ui-tabs-nav { border-bottom: 1px solid #d0d0d0 !important; padding: 16px 0 0 0; }
+.ui-tabs .ui-tabs-nav li { border-top: 0.3125em solid transparent; margin: 0; padding: 0; position: relative; top: 0; }
 .ui-tabs .ui-tabs-nav li.ui-corner-top { border-top-right-radius: 0; border-top-left-radius: 0; }
-
-ul.quicktabs-style-nostyle li, .ui-tabs .ui-tabs-nav li { border-top: 0.3125em solid transparent; margin: 0; padding: 0; position: relative; top: 0; }
-
-ul.quicktabs-style-nostyle li { display: inline-block; }
-
-ul.quicktabs-style-nostyle li, .ui-tabs .ui-tabs-nav li.ui-state-default { background: none; background-color: transparent; color: #191919; }
-
-ul.quicktabs-style-nostyle li:hover, ul.quicktabs-style-nostyle li.active, .ui-tabs .ui-tabs-nav li.ui-state-hover, .ui-tabs .ui-tabs-nav li.ui-state-active, .ui-tabs .ui-tabs-nav li.ui-tabs-selected { border-top: 0.3125em solid #8c1d40; background: none; background-color: transparent; margin-bottom: -1px; padding-bottom: 0; }
-
-ul.quicktabs-style-nostyle li, .ui-tabs .ui-tabs-nav li.ui-state-default, .ui-tabs .ui-tabs-nav li.ui-state-hover, .ui-tabs .ui-tabs-nav li.ui-state-active, .ui-tabs .ui-tabs-nav li.ui-tabs-selected { margin-bottom: -1px; }
-
-ul.quicktabs-style-nostyle li a, .ui-tabs .ui-tabs-nav li a { display: block; position: relative; border-color: #747474 #747474 transparent #747474; border-image: none; border-radius: 0; border-style: solid; border-width: 1px; padding: 0.625em 0.9375em; color: #747474; line-height: 24px; transition: 0.5s cubic-bezier(0.19, 1, 0.19, 1); }
-
-ul.quicktabs-style-nostyle li a { display: inline-block; padding: 1em 1.5em; text-decoration: none; color: #191919; font-size: 1.125em; font-weight: 400; line-height: 24px; }
-
+.ui-tabs .ui-tabs-nav li.ui-state-default { background: none; background-color: transparent; color: #191919; }
+.ui-tabs .ui-tabs-nav li.ui-state-hover, .ui-tabs .ui-tabs-nav li.ui-state-active, .ui-tabs .ui-tabs-nav li.ui-tabs-selected { border-top: 0.3125em solid #8c1d40; background: none; background-color: transparent; margin-bottom: -1px; padding-bottom: 0; }
+.ui-tabs .ui-tabs-nav li.ui-state-default { margin-bottom: -1px; }
 .ui-tabs .ui-tabs-nav li.ui-state-default a, .ui-tabs .ui-tabs-nav li.ui-state-default a:link, .ui-tabs .ui-tabs-nav li.ui-state-default a:visited { color: #191919; transition: 0.5s cubic-bezier(0.19, 1, 0.19, 1); }
-
-ul.quicktabs-style-nostyle li:hover a, .ui-tabs .ui-tabs-nav li.ui-state-hover a { border: 0.5em solid #8c1d40; }
-
-ul.quicktabs-style-nostyle li.active a, ul.quicktabs-style-nostyle li.active:hover a, .ui-tabs .ui-tabs-nav li.ui-state-active a { background-color: transparent; border-bottom-color: #fff; margin-left: 0.08em; }
-
+.ui-tabs .ui-tabs-nav li a { display: block; position: relative; border-color: #747474 #747474 transparent #747474; border-image: none; border-radius: 0; border-style: solid; border-width: 1px; padding: 0.625em 0.9375em; color: #747474; line-height: 24px; transition: 0.5s cubic-bezier(0.19, 1, 0.19, 1); }
+.ui-tabs .ui-tabs-nav li.ui-state-hover a { border: 0.5em solid #8c1d40; }
+.ui-tabs .ui-tabs-nav li.ui-state-active a { background-color: transparent; border-bottom-color: #fff; margin-left: 0.08em; }
 .ui-tabs .ui-tabs-nav li.ui-state-focus a { border-top: 0.125em solid #191919; border-right: 0.125em solid #191919; border-bottom: 0.125em solid #191919; border-left: 0.125em solid #191919; }
+
+ul.quicktabs-style-nostyle { border-bottom: 1px solid #d0d0d0 !important; margin-bottom: 0; padding: 16px 0 0 0; }
+ul.quicktabs-style-nostyle li { background: none; background-color: transparent; border-top: 0.3125em solid transparent; color: #191919; display: inline-block; margin: 0 0 -1px 0; padding: 0; position: relative; top: 0; }
+ul.quicktabs-style-nostyle li:hover a { border: 0.5em solid #8c1d40; }
+ul.quicktabs-style-nostyle li:hover, ul.quicktabs-style-nostyle li.active { border-top: 0.3125em solid #8c1d40; background: none; background-color: transparent; margin-bottom: -1px; padding-bottom: 0; }
+ul.quicktabs-style-nostyle li.active a, ul.quicktabs-style-nostyle li.active:hover a { background-color: transparent; border-bottom-color: #fff; margin-left: 0.08em; }
+ul.quicktabs-style-nostyle li a { display: inline-block; position: relative; border-color: #747474 #747474 transparent #747474; border-image: none; border-radius: 0; border-style: solid; border-width: 1px; padding: 1em 1.5em; color: #191919; font-size: 1.125rem; font-weight: 400; line-height: 24px; text-decoration: none; transition: 0.5s cubic-bezier(0.19, 1, 0.19, 1); }
 
 ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a { color: #191919; }
 
 /* fixes for stacked tabs */
-body #content .ui-tabs .ui-tabs-nav li.ui-state-focus { margin-bottom: 0; }
-body #content .ui-tabs .ui-tabs-nav li.ui-state-focus a { border-top: none; }
-body #content .ui-tabs .ui-tabs-nav li a { margin-left: 0; border-bottom: transparent; clear: both; }
+#content .ui-tabs .ui-tabs-nav li { border: none; }
+#content .ui-tabs .ui-tabs-nav li a { border: none; color: #191919; font-weight: bold; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; }
+#content .ui-tabs .ui-tabs-nav li a:focus { outline: none; }
+#content .ui-tabs .ui-tabs-nav li a:after { content: ''; position: absolute; display: block; height: 0.5rem; background-color: #8c1d40; width: 0; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; bottom: 0; left: -0.5rem; margin-left: 0.5rem; }
+#content .ui-tabs .ui-tabs-nav li:hover a { color: #8c1d40; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; }
+#content .ui-tabs .ui-tabs-nav li:hover a:after { width: 100%; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; }
+#content .ui-tabs .ui-tabs-nav li:before { content: ''; }
+#content .ui-tabs .ui-tabs-nav li.ui-state-active a { color: #8c1d40; }
+#content .ui-tabs .ui-tabs-nav li.ui-state-active a:after { width: 100%; }
+#content .ui-tabs .ui-tabs-nav li.ui-state-focus { margin-bottom: 0; }
+#content .ui-tabs .ui-tabs-nav li.ui-state-focus a { border-top: none; }
 
 .pagination { display: inline-block; padding-left: 0; margin: 1.5rem 0; border-radius: 0; }
 .pagination > li { font-size: 1.25em; display: inline; }
@@ -108,45 +107,45 @@ body #content .ui-tabs .ui-tabs-nav li a { margin-left: 0; border-bottom: transp
 
 /* =SIDEBAR MENUS
 -------------------------------------------------------------- */
-div.region-content #page-page .pane-system-main-menu, div.region-content #page-page .pane-menu-tree { border-top: 8px solid #8c1d40; margin-bottom: 3em; padding: 2em 0; position: relative; z-index: 0; }
-div.region-content #page-page .pane-system-main-menu h2, div.region-content #page-page .pane-menu-tree h2 { font-size: 1.3125em; }
-div.region-content #page-page .pane-system-main-menu ul.menu, div.region-content #page-page .pane-menu-tree ul.menu { padding-left: 0; }
-div.region-content #page-page .pane-system-main-menu ul.menu li, div.region-content #page-page .pane-menu-tree ul.menu li { list-style-type: none; margin: 0; padding: 0; }
-div.region-content #page-page .pane-system-main-menu ul.menu li a, div.region-content #page-page .pane-menu-tree ul.menu li a { background-color: #fff; border-top: 1px solid #d0d0d0; border-bottom: none; display: block; padding: 0.625em 0.3125em; color: #8c1d40; font-weight: 200; text-decoration: none; font-size: 1.125em; }
-div.region-content #page-page .pane-system-main-menu ul.menu li a:hover, div.region-content #page-page .pane-menu-tree ul.menu li a:hover { background-color: #fafafa; font-weight: normal; }
-div.region-content #page-page .pane-system-main-menu ul.menu li li a, div.region-content #page-page .pane-menu-tree ul.menu li li a { padding-left: 1.375em; }
-div.region-content #page-page .pane-system-main-menu ul.menu li li li a, div.region-content #page-page .pane-menu-tree ul.menu li li li a { padding-left: 2.75em; }
-div.region-content #page-page .pane-system-main-menu ul.menu li ul li ul li a, div.region-content #page-page .pane-menu-tree ul.menu li ul li ul li a { margin: 0 1.5rem 0 3.5rem; }
-div.region-content #page-page .pane-system-main-menu ul.menu li a.active, div.region-content #page-page .pane-system-main-menu ul.menu li.active a, div.region-content #page-page .pane-system-main-menu ul.menu li.active > a, div.region-content #page-page .pane-system-main-menu ul.menu li.active-trail > a, div.region-content #page-page .pane-menu-tree ul.menu li a.active, div.region-content #page-page .pane-menu-tree ul.menu li.active a, div.region-content #page-page .pane-menu-tree ul.menu li.active > a, div.region-content #page-page .pane-menu-tree ul.menu li.active-trail > a { font-weight: normal; }
-div.region-content #page-page .pane-system-main-menu ul.menu li.expanded, div.region-content #page-page .pane-system-main-menu ul.menu li.collapsed, div.region-content #page-page .pane-system-main-menu ul.menu li.leaf, div.region-content #page-page .pane-menu-tree ul.menu li.expanded, div.region-content #page-page .pane-menu-tree ul.menu li.collapsed, div.region-content #page-page .pane-menu-tree ul.menu li.leaf { list-style-image: none; }
-div.region-content #page-page .pane-system-main-menu ul.menu li.expanded span, div.region-content #page-page .pane-menu-tree ul.menu li.expanded span { margin-top: 1.4rem; }
-div.region-content #page-page .pane-system-main-menu ul.menu li.expanded ul.menu li.expanded span, div.region-content #page-page .pane-menu-tree ul.menu li.expanded ul.menu li.expanded span { margin-top: 0; }
-div.region-content #page-page .pane-system-main-menu ul.menu li.expanded ul.menu:after, div.region-content #page-page .pane-menu-tree ul.menu li.expanded ul.menu:after { padding-top: 0.4rem; }
-div.region-content #page-page .pane-system-main-menu:before, div.region-content #page-page .pane-menu-tree:before { border: none; content: ""; display: block; height: 100%; left: 0; position: absolute; top: 0; width: 100%; z-index: -1; }
-div.region-content #page-page .pane-system-main-menu .pane-system-main-menu ul.menu li a:focus, div.region-content #page-page .pane-system-main-menu .pane-menu-tree ul.menu li a:focus, div.region-content #page-page .pane-menu-tree .pane-system-main-menu ul.menu li a:focus, div.region-content #page-page .pane-menu-tree .pane-menu-tree ul.menu li a:focus { outline: 0.125em solid #191919; }
+div.region-content .pane-system-main-menu, div.region-content .pane-menu-tree { border-top: 8px solid #8c1d40; margin-bottom: 3em; padding: 2em 0; position: relative; z-index: 0; }
+div.region-content .pane-system-main-menu h2, div.region-content .pane-menu-tree h2 { font-size: 1.3125em; }
+div.region-content .pane-system-main-menu ul.menu, div.region-content .pane-menu-tree ul.menu { padding-left: 0; }
+div.region-content .pane-system-main-menu ul.menu li, div.region-content .pane-menu-tree ul.menu li { list-style-type: none; margin: 0; padding: 0; }
+div.region-content .pane-system-main-menu ul.menu li a, div.region-content .pane-menu-tree ul.menu li a { background-color: #fff; border-top: 1px solid #d0d0d0; border-bottom: none; display: block; padding: 0.625em 0.3125em; color: #8c1d40; font-weight: 200; text-decoration: none; font-size: 1.125em; }
+div.region-content .pane-system-main-menu ul.menu li a:hover, div.region-content .pane-menu-tree ul.menu li a:hover { background-color: #fafafa; font-weight: normal; }
+div.region-content .pane-system-main-menu ul.menu li li a, div.region-content .pane-menu-tree ul.menu li li a { padding-left: 1.375em; }
+div.region-content .pane-system-main-menu ul.menu li li li a, div.region-content .pane-menu-tree ul.menu li li li a { padding-left: 2.75em; }
+div.region-content .pane-system-main-menu ul.menu li ul li ul li a, div.region-content .pane-menu-tree ul.menu li ul li ul li a { margin: 0 1.5rem 0 3.5rem; }
+div.region-content .pane-system-main-menu ul.menu li a.active, div.region-content .pane-system-main-menu ul.menu li.active a, div.region-content .pane-system-main-menu ul.menu li.active > a, div.region-content .pane-system-main-menu ul.menu li.active-trail > a, div.region-content .pane-menu-tree ul.menu li a.active, div.region-content .pane-menu-tree ul.menu li.active a, div.region-content .pane-menu-tree ul.menu li.active > a, div.region-content .pane-menu-tree ul.menu li.active-trail > a { font-weight: normal; }
+div.region-content .pane-system-main-menu ul.menu li.expanded, div.region-content .pane-system-main-menu ul.menu li.collapsed, div.region-content .pane-system-main-menu ul.menu li.leaf, div.region-content .pane-menu-tree ul.menu li.expanded, div.region-content .pane-menu-tree ul.menu li.collapsed, div.region-content .pane-menu-tree ul.menu li.leaf { list-style-image: none; }
+div.region-content .pane-system-main-menu ul.menu li.expanded span, div.region-content .pane-menu-tree ul.menu li.expanded span { margin-top: 1.4rem; }
+div.region-content .pane-system-main-menu ul.menu li.expanded ul.menu li.expanded span, div.region-content .pane-menu-tree ul.menu li.expanded ul.menu li.expanded span { margin-top: 0; }
+div.region-content .pane-system-main-menu ul.menu li.expanded ul.menu:after, div.region-content .pane-menu-tree ul.menu li.expanded ul.menu:after { padding-top: 0.4rem; }
+div.region-content .pane-system-main-menu:before, div.region-content .pane-menu-tree:before { border: none; content: ""; display: block; height: 100%; left: 0; position: absolute; top: 0; width: 100%; z-index: -1; }
+div.region-content .pane-system-main-menu .pane-system-main-menu ul.menu li a:focus, div.region-content .pane-system-main-menu .pane-menu-tree ul.menu li a:focus, div.region-content .pane-menu-tree .pane-system-main-menu ul.menu li a:focus, div.region-content .pane-menu-tree .pane-menu-tree ul.menu li a:focus { outline: 0.125em solid #191919; }
 
-div.region-content #page-page .pane-menu-tree { margin-top: 0; border: none; }
-div.region-content #page-page .pane-menu-tree ul li::before { content: none; }
-div.region-content #page-page .pane-menu-tree ul.menu { margin-bottom: 0; }
-div.region-content #page-page .pane-menu-tree ul.menu li { border-top: 1px solid #d0d0d0; }
-div.region-content #page-page .pane-menu-tree ul.menu li a { background-color: #fff; border: none; display: block; margin: 0 1rem; padding: 1.4rem 0 1.3rem 0; color: #191919; font-weight: 400; text-decoration: none; font-size: 1rem; letter-spacing: -0.037rem; line-height: 1.5rem; position: relative; }
-div.region-content #page-page .pane-menu-tree ul.menu li a.active { border-bottom: 8px solid #ffc627; padding-bottom: 0.8rem; }
-div.region-content #page-page .pane-menu-tree ul.menu li a:hover { background-color: #fff; text-decoration: underline; }
-div.region-content #page-page .pane-menu-tree ul.menu li.expanded a.active { padding: 1.4rem 0 0.8rem 0; margin-bottom: 0.8rem; }
-div.region-content #page-page .pane-menu-tree ul.menu li.expanded ul li a.active { padding: 0 0 0.5rem 0; margin-bottom: 0.5rem; font-weight: normal; }
-div.region-content #page-page .pane-menu-tree ul.menu li.expanded ul li a::before { content: none; }
-div.region-content #page-page .pane-menu-tree ul.menu li.last ul li.first.last.leaf a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; padding-top: 0.5rem; }
-div.region-content #page-page .pane-menu-tree ul.menu li ul { border-top: none; }
-div.region-content #page-page .pane-menu-tree ul.menu li ul li { border-top: 0; }
-div.region-content #page-page .pane-menu-tree ul.menu li ul li a { background-color: #fff; border-top: none; border-bottom: none; display: block; padding-top: 0.5rem; padding-left: 0; color: #191919; font-weight: 400; text-decoration: none; font-size: 1rem; letter-spacing: -0.5px; margin: 0 2.5rem 0 2.5rem; padding-bottom: 0.5rem; }
-div.region-content #page-page .pane-menu-tree ul.menu li ul li.first a { padding-top: 0; padding-bottom: 0.5rem; }
-div.region-content #page-page .pane-menu-tree ul.menu li ul li.leaf a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; }
-div.region-content #page-page .pane-menu-tree ul.menu li ul li.leaf.last a { border-top: none; }
-div.region-content #page-page .pane-menu-tree ul.menu li ul li.leaf.first.last a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; border-top: none; }
-div.region-content #page-page .pane-menu-tree ul.menu li ul li.last ul li.first.last.leaf a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; padding-top: 0.5rem; }
-div.region-content #page-page .pane-menu-tree ul.menu li ul li.expanded ul li a::before { content: none; }
-div.region-content #page-page .pane-menu-tree h2.pane-title { font-size: 1.5rem; font-weight: 700; line-height: 1.5rem; letter-spacing: -0.015em; color: #191919; padding: 0 1rem 1rem 1rem; margin: 0; display: block; text-decoration: none; }
-div.region-content #page-page .pane-menu-tree .pane-content { border-width: 0 1px 1px 1px; border-style: solid; border-color: #d0d0d0; }
+div.region-content .pane-menu-tree { margin-top: 0; border: none; }
+div.region-content .pane-menu-tree ul li::before { content: none; }
+div.region-content .pane-menu-tree ul.menu { margin-bottom: 0; }
+div.region-content .pane-menu-tree ul.menu li { border-top: 1px solid #d0d0d0; }
+div.region-content .pane-menu-tree ul.menu li a { background-color: #fff; border: none; display: block; margin: 0 1rem; padding: 1.4rem 0 1.3rem 0; color: #191919; font-weight: 400; text-decoration: none; font-size: 1rem; letter-spacing: -0.037rem; line-height: 1.5rem; position: relative; }
+div.region-content .pane-menu-tree ul.menu li a.active { border-bottom: 8px solid #ffc627; padding-bottom: 0.8rem; }
+div.region-content .pane-menu-tree ul.menu li a:hover { background-color: #fff; text-decoration: underline; }
+div.region-content .pane-menu-tree ul.menu li.expanded a.active { padding: 1.4rem 0 0.8rem 0; margin-bottom: 0.8rem; }
+div.region-content .pane-menu-tree ul.menu li.expanded ul li a.active { border-bottom: 8px solid #ffc627; padding: 0 0 0.5rem 0; margin-bottom: 0.5rem; font-weight: normal; }
+div.region-content .pane-menu-tree ul.menu li.expanded ul li a::before { content: none; }
+div.region-content .pane-menu-tree ul.menu li.last ul li.first.last.leaf a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; padding-top: 0.5rem; }
+div.region-content .pane-menu-tree ul.menu li ul { border-top: none; }
+div.region-content .pane-menu-tree ul.menu li ul li { border-top: 0; }
+div.region-content .pane-menu-tree ul.menu li ul li a { background-color: #fff; border-top: none; border-bottom: none; display: block; padding-top: 0.5rem; padding-left: 0; color: #191919; font-weight: 400; text-decoration: none; font-size: 1rem; letter-spacing: -0.5px; margin: 0 2.5rem 0 2.5rem; padding-bottom: 0.5rem; }
+div.region-content .pane-menu-tree ul.menu li ul li.first a { padding-top: 0; padding-bottom: 0.5rem; }
+div.region-content .pane-menu-tree ul.menu li ul li.leaf a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; }
+div.region-content .pane-menu-tree ul.menu li ul li.leaf.last a { border-top: none; }
+div.region-content .pane-menu-tree ul.menu li ul li.leaf.first.last a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; border-top: none; }
+div.region-content .pane-menu-tree ul.menu li ul li.last ul li.first.last.leaf a { border-top: none; border-bottom: none; font-size: 1rem; color: #2a2a2a; font-weight: normal; padding-top: 0.5rem; }
+div.region-content .pane-menu-tree ul.menu li ul li.expanded ul li a::before { content: none; }
+div.region-content .pane-menu-tree h2.pane-title { font-size: 1.5rem; font-weight: 700; line-height: 1.5rem; letter-spacing: -0.015em; color: #191919; padding: 0 1rem 1rem 1rem; margin: 0; display: block; text-decoration: none; }
+div.region-content .pane-menu-tree .pane-content { border-width: 0 1px 1px 1px; border-style: solid; border-color: #d0d0d0; }
 
 span.nolink { display: block; font-size: 1.1rem; letter-spacing: -.035em; font-weight: 700; text-align: left; line-height: calc(100% + 0.12em); opacity: 1; margin: 1rem 2.5rem 1rem 2.5rem; }
 

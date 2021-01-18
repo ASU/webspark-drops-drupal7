@@ -12,7 +12,7 @@
 .megafoot .space-bot-md { margin-bottom: 0; padding-bottom: 0; }
 .megafoot .row a { border-bottom: 0; color: #e8e8e8; display: inline-block; font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif; font-size: 1rem; opacity: 1; text-align: left; text-decoration: underline; transition: none; }
 .megafoot .row.megafoot-logo-social { border-bottom: 1px solid #333; }
-.megafoot .row.megafoot-logo-social #mega-footer-logo-wrapper { padding: 1.5rem 0; display: inline-block; }
+.megafoot .row.megafoot-logo-social #mega-footer-logo-wrapper { padding: 1.5rem 0 1.5rem 1rem; display: inline-block; }
 .megafoot .row.megafoot-logo-social #mega-footer-logo-wrapper a { border-bottom: 0; }
 .megafoot .row.megafoot-logo-social #mega-footer-logo-wrapper img { height: auto; max-height: 112px; padding: .5rem 0; }
 .megafoot .row.megafoot-logo-social #mega-footer-social-media { float: right; padding-left: 0; padding-right: 0; }
@@ -36,6 +36,7 @@
   .megafoot .dgtl-mkting-101 { float: left; padding: 0 0 1rem 0; }
   .megafoot h2 { font-size: 1.125rem; margin-bottom: 1.25rem; margin-top: 1.25rem; }
   .megafoot .row .space-bot-md { border-bottom: 1px solid #383d3e; padding-left: 0; padding-right: 0; }
+  .megafoot .row #mega-footer-logo-wrapper { padding-left: 0 !important; }
   .megafoot .row.megafoot-logo-social #mega-footer-social-media { float: left; }
   .megafoot .row.megafoot-logo-social #mega-footer-social-media .dgtl-mkting-101 { float: left; padding: 0 0 1rem 0; }
   .megafoot .row .fa.icon-rotates, .megafoot .row svg.icon-rotates { display: block; transition-duration: 0.4s; float: right; }

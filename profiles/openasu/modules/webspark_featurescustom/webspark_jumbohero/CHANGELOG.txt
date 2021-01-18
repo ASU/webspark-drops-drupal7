@@ -1,3 +1,8 @@
+Webspark Jumbohero - 7.x-1.8, 2021-01-17
+------------------------------
+- Updated font-weight from 900 to 700 for bold output to keep Windows-based browsers from implementing
+  the Arial Black font (and break Web standards 2.0).
+
 Webspark Jumbohero - 7.x-1.7, 2019-12-30
 ------------------------------
 - All form field outputs are now sanitized before rendering. (This is mitigated in that only Drupal users with privileges

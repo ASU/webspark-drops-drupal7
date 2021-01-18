@@ -1,3 +1,10 @@
+Webspark Mega Menu - 7.x-2.1, 2021-01-17
+----------------------------------------
+- Moved submenu flyout carets further to the right for better readability and to keep text from pushing
+  the caret down to the next line.
+- Updated font-weight from 900 to 700 for bold output to keep Windows-based browsers from implementing
+  the Arial Black font (and break Web standards 2.0).
+
 Webspark Mega Menu - 7.x-2.0, 2020-10-19
 ---------------------
 - Added new Web Standards 2 Limited desktop theming for primary navigation

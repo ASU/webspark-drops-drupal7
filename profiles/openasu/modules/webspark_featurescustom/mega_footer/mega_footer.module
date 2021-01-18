@@ -91,9 +91,13 @@ function mega_footer_block_view($delta = '') {
               . $logo_link_suffix . "</div>"
             : '<div id="mega-footer-logo-wrapper">' . $logo_link_prefix
               . "<img src='$file_url' alt='$alt' title='$alt'/>"
-              . $logo_link_suffix . "</div>"
-          ;
+              . $logo_link_suffix . "</div>";
+        } else { // URL for logo not generated, use default ASU logo
+          $footer_mark .=
+            _mega_footer_generate_default_logo($theme);
         }
+      } else { // no uploaded logo, use default ASU logo
+        $footer_mark .= _mega_footer_generate_default_logo($theme);
       }
 
       // Social Media icons
@@ -601,4 +605,15 @@ function mega_footer_block_validate(&$form, $form_state) {
       }
     }
   }
+}
+
+function _mega_footer_generate_default_logo($ws2_theme) {
+  $logo_url = drupal_get_path('module', 'mega_footer') . '/img/asu_university_logo.png';
+  return ($ws2_theme === "_ws2")
+    ? '<div id="mega-footer-logo-wrapper" class="col-md-5 col-sm-12">'
+    . '<img src="/' . $logo_url . '" alt="Arizona State University" />'
+    . "</div>"
+    : '<div id="mega-footer-logo-wrapper">'
+    . '<img src="/' . $logo_url . '" alt="Arizona State University" title="Arizona State University" />'
+    . "</div>";
 }

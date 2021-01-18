@@ -100,8 +100,8 @@ $text-color:              $ws2-gray-darkest;
 
 //// Alternate styling
 $text-color-bg-dark:      $ws2-gray-lightest;
-$ws2-content-styles-container: "div.region-content #page-page";
 $ws2-content-styles-container-lite: "div.region-content"; // to not override everything
+$ws2-content-styles-container: $ws2-content-styles-container-lite;
 $ws2-content-styles-blacklist: "div.pane-menu-tree";
 
 //** Global textual link color.
