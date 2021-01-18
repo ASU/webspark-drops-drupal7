@@ -1,7 +1,6 @@
 Innovation 7.x-1.16, 2020-04-07
 -------------------------------
 - Added horizontal rule tag (<hr>) to list of WYSIWYG acceptable elements
--
 
 Innovation 7.x-1.15, 2019-12-31
 -------------------------------
