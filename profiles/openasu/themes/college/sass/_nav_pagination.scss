@@ -103,8 +103,8 @@
       &:focus {
         text-decoration: none;
         font-weight: bold;
-        background-color: $ws2-maroon !important;
-        color: #fff !important;
+        background-color: $ws2-gray-lighter !important;
+        color: $ws2-gray-darkest !important;
       }
     }
   }
@@ -165,4 +165,5 @@
   padding:  5px 14px; // taken from Innovation
   background-color: $ws2-maroon;
   color: #fff;
+  min-width: 3.25rem;
 }
