@@ -217,7 +217,7 @@ EOL;
         if ($cache_id === 'asu_brand:footer' || $cache_id === 'asu_brand:head') {
           return '<!-- No ' . $cache_id . ' from AFS for v5.x -->';
         } elseif ($cache_id === 'asu_brand:header') {
-          return _asu_brand_get_cookie_consent();
+          return _asu_brand_get_cookie_consent($cache_id);
         }
       }
       else { // Render WS1.0 header + footer from AFS or cached version (legacy block)
@@ -296,9 +296,10 @@ EOL;
 /**
  * Return Cookie Consent markup
  *
+ * @param string $cache_id - Cache ID
  * @return string
  */
-function _asu_brand_get_cookie_consent() {
+function _asu_brand_get_cookie_consent($cache_id) {
   return <<<EOL
 <!-- Partial ' . $cache_id . ' asset for v5.x -->
 <link rel="stylesheet" type="text/css" href="https://www.asu.edu/asuthemes/5.0/vendor/cookieconsent/cookieconsent.min.css"/>
