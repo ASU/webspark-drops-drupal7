@@ -21,6 +21,13 @@ function college_preprocess_html(&$variables) {
     if (strstr($path,'admin/reports/dblog')) {
       drupal_add_js(path_to_theme() . '/js/college-admin.js');
     }
+  } else { // cookie consent script
+    drupal_add_js("https://www.asu.edu/asuthemes/5.0/vendor/cookieconsent/cookieconsent.min.js",
+      array(
+        'type' => 'external',
+        'scope' => 'footer',
+        'group' => JS_THEME,
+      ));
   }
 
   // Readded page title to <title> tag after Kalatheme's errant scraping
@@ -39,7 +46,7 @@ function college_preprocess_html(&$variables) {
     'weight' => 200
   ));
 
-  $link_apple_icons = array(
+  $link_items = array(
     'default' => array(
       'rel' => 'apple-touch-icon',
       'href' => '/profiles/openasu/themes/college/images/apple-touch-icon.png',
@@ -48,8 +55,15 @@ function college_preprocess_html(&$variables) {
       'rel' => 'apple-touch-icon-precomposed',
       'href' => '/profiles/openasu/themes/college/images/apple-touch-icon-precomposed.png',
     ),
+    // Cookie consent CSS
+    'cookie_consent' => array(
+      'rel' => 'stylesheet',
+      'type' => 'text/css',
+      'href' => 'https://www.asu.edu/asuthemes/5.0/vendor/cookieconsent/cookieconsent.min.css',
+    ),
   );
-  foreach ($link_apple_icons as $key => $value) {
+
+  foreach ($link_items as $key => $value) {
     drupal_add_html_head_link($value);
   }
 
@@ -60,7 +74,7 @@ function college_preprocess_html(&$variables) {
       '#tag' => 'meta',
       '#attributes' => array(
         // Don't forget to update openasu.info as well!!
-        'content' => 'Webspark:1.76.3 (Jacksonville)',
+        'content' => 'Webspark:1.76.4 (Wacahoota)',
         'http-equiv' => 'X-Name-of-Distro',
         'name' => 'cmsversion',
       )

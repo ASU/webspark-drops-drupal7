@@ -1,3 +1,21 @@
+Webspark 1.76.4 (Wacahoota), 2020-11-30
+---------------------------------------
+- Webspark core updates
+
+  * Drupal core - v7.78+patch4
+    - Security update! See the latest release notes at
+      https://www.drupal.org/project/drupal/releases/7.78 for more information
+
+- Web standards components in Webspark
+
+  * ASU Brand (asu_brand) - v2.1
+    - Multiple long tab names may cause response issues on desktop.
+  * College (college) - v1.3
+    - Pager brought into alignment with Web standards 2.0
+    - Re-added core Google Tag Manager and Cookie Consent code (fixed regression)
+  * Webspark Carousel (uto_carousel) - v1.11
+    - Updated ASU Carousel next/previous buttons to be more in line with Web standards 2.0
+
 Webspark 1.76.3 (Jacksonville), 2021-01-17
 -----------------------------------------
 - Web standards components in Webspark

@@ -40,7 +40,7 @@ ul.quicktabs-style-nostyle { font-size: 24px; }
 
 .ui-widget-header { background: none; min-height: auto; padding: 0; color: #191919; font-size: 1.125rem; font-weight: 200; line-height: 24px; }
 
-.ui-tabs .ui-tabs-nav { border-bottom: 1px solid #d0d0d0 !important; padding: 16px 0 0 0; }
+.ui-tabs .ui-tabs-nav { border-bottom: 1px solid #d0d0d0 !important; padding: 16px 0 0 0; display: flex; flex-wrap: wrap; }
 .ui-tabs .ui-tabs-nav li { border-top: 0.3125em solid transparent; margin: 0; padding: 0; position: relative; top: 0; }
 .ui-tabs .ui-tabs-nav li.ui-corner-top { border-top-right-radius: 0; border-top-left-radius: 0; }
 .ui-tabs .ui-tabs-nav li.ui-state-default { background: none; background-color: transparent; color: #191919; }
@@ -92,7 +92,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a { color: #191919; }
 .pager:after { clear: both; }
 .pager li { font-size: 1.25em; display: inline; margin: 0 1em; }
 .pager li > a, .pager li > span { display: inline-block; background-color: #fff; border-radius: 32px; border: 1px solid #fff; }
-.pager li > a:hover, .pager li > a:focus { text-decoration: none; font-weight: bold; background-color: #8c1d40 !important; color: #fff !important; }
+.pager li > a:hover, .pager li > a:focus { text-decoration: none; font-weight: bold; background-color: #e8e8e8 !important; color: #191919 !important; }
 .pager .next > a, .pager .next > span { float: right; }
 .pager .previous > a, .pager .previous > span { float: left; }
 .pager .disabled > a, .pager .disabled > a:hover, .pager .disabled > a:focus, .pager .disabled > span { color: #747474; background-color: #fff; cursor: not-allowed; }
@@ -103,7 +103,7 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a { color: #191919; }
 .item-list.item-list-pager .pager li a { background-color: #fff; border-radius: 32px; border: 1px solid #fff !important; }
 .item-list.item-list-pager .pager-ellipsis { display: none; }
 
-.item-list.item-list-pager .pager .pager-current, #media-browser-tabset .item-list.item-list-pager .pager .pager-current { border: 1px solid #8c1d40; border-radius: 2rem; padding: 5px 14px; background-color: #8c1d40; color: #fff; }
+.item-list.item-list-pager .pager .pager-current, #media-browser-tabset .item-list.item-list-pager .pager .pager-current { border: 1px solid #8c1d40; border-radius: 2rem; padding: 5px 14px; background-color: #8c1d40; color: #fff; min-width: 3.25rem; }
 
 /* =SIDEBAR MENUS
 -------------------------------------------------------------- */

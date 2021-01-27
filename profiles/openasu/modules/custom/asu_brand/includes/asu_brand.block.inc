@@ -191,17 +191,33 @@ EOL;
       cache_set($cache_id, $output, 'cache', time() + ASU_BRAND_CACHE_LIFETIME);
       variable_set($cache_id, $output);
     }
+
+    // Render GTM header
+    elseif ($cache_id === 'asu_brand:gtm') {
+      $markup = <<<EOL
+<!-- Google Tag Manager ASU Universal-->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-KDWN8Z"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KDWN8Z');</script>
+<!-- End Google Tag Manager ASU Universal -->
+EOL;
+      $output = array(
+        '#markup' => $markup,
+      );
+      cache_set($cache_id, $output, 'cache', time() + ASU_BRAND_CACHE_LIFETIME);
+      variable_set($cache_id, $output);
+    }
+
     else { // Possible WS1.0 assets needed? Depends on version requested.
       if ($version === '5.0') { // Skip AFS assets for v5.0
         if ($cache_id === 'asu_brand:footer' || $cache_id === 'asu_brand:head') {
           return '<!-- No ' . $cache_id . ' from AFS for v5.x -->';
         } elseif ($cache_id === 'asu_brand:header') {
-          return <<<EOL
-<!-- Partial ' . $cache_id . ' asset for v5.x -->
-<link rel="stylesheet" type="text/css" href="https://www.asu.edu/asuthemes/5.0/vendor/cookieconsent/cookieconsent.min.css"/>
-<script src="https://www.asu.edu/asuthemes/5.0/vendor/cookieconsent/cookieconsent.min.js"></script>
-<!-- End Partial ' . $cache_id . ' asset for v5.x -->
-EOL;
+          return _asu_brand_get_cookie_consent($cache_id);
         }
       }
       else { // Render WS1.0 header + footer from AFS or cached version (legacy block)
@@ -256,7 +272,6 @@ function asu_brand_head_inject() {
     var hostname = window.location.hostname;
     var ASUHeader = ASUHeader || {};
 
-
     if (overrides.indexOf(hostname) == -1) {
         ASUHeader.user_signedin = $asu_sso_signedin;
         ASUHeader.signout_url = "$asu_sso_signouturl";
@@ -276,4 +291,19 @@ EOL;
 
   // This appears to repeat the inline script above(?)
   drupal_add_js(drupal_get_path('module', 'asu_brand') . '/asu_brand.js', array()); // Repeats the above inline JS
+}
+
+/**
+ * Return Cookie Consent markup
+ *
+ * @param string $cache_id - Cache ID
+ * @return string
+ */
+function _asu_brand_get_cookie_consent($cache_id) {
+  return <<<EOL
+<!-- Partial ' . $cache_id . ' asset for v5.x -->
+<link rel="stylesheet" type="text/css" href="https://www.asu.edu/asuthemes/5.0/vendor/cookieconsent/cookieconsent.min.css"/>
+<script src="https://www.asu.edu/asuthemes/5.0/vendor/cookieconsent/cookieconsent.min.js"></script>
+<!-- End Partial ' . $cache_id . ' asset for v5.x -->
+EOL;
 }

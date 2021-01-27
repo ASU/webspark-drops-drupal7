@@ -53,7 +53,7 @@ Carousel + Flex Slider CSS
 .pane-bundle-uto-carousel .flex-direction-nav li {
     display: inline;
 }
-.pane-bundle-uto-carousel .flex-direction-nav a {
+.pane-bundle-uto-carousel .flex-direction-nav li:not(.btn) > a:not(.btn) {
     display: inline-block;
     padding: 5px 14px;
     background-color: #fff;
@@ -71,6 +71,7 @@ Carousel + Flex Slider CSS
     margin: 0;
     position: relative;
     opacity: 100;
+    border-bottom: 1px solid #ddd;
 }
 .pane-bundle-uto-carousel .flex-direction-nav .flex-next {
   right: 0px;
@@ -91,8 +92,8 @@ Carousel + Flex Slider CSS
 .pane-bundle-uto-carousel .flex-direction-nav a.flex-next:before {
   content: '';
 }
-.pane-bundle-uto-carousel .flex-direction-nav a:hover,
-.pane-bundle-uto-carousel .flex-direction-nav a:focus {
+.pane-bundle-uto-carousel .flex-direction-nav li:not(.btn) > a:not(.btn):hover,
+.pane-bundle-uto-carousel .flex-direction-nav li:not(.btn) > a:not(.btn):focus {
     text-decoration: none;
     background-color: #eee;
     border: 1px solid #ddd;
