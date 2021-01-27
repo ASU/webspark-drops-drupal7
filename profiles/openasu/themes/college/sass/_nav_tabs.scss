@@ -26,6 +26,8 @@ ul.quicktabs-style-nostyle {
 .ui-tabs .ui-tabs-nav {
   border-bottom: 1px solid $ws2-gray-light !important;
   padding: $padding-base-vertical 0 0 0;
+  display: flex;
+  flex-wrap: wrap;
   li {
     border-top: 0.3125em solid transparent;
     margin: 0;

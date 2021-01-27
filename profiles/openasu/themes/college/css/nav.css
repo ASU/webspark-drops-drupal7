@@ -40,7 +40,7 @@ ul.quicktabs-style-nostyle { font-size: 24px; }
 
 .ui-widget-header { background: none; min-height: auto; padding: 0; color: #191919; font-size: 1.125rem; font-weight: 200; line-height: 24px; }
 
-.ui-tabs .ui-tabs-nav { border-bottom: 1px solid #d0d0d0 !important; padding: 16px 0 0 0; }
+.ui-tabs .ui-tabs-nav { border-bottom: 1px solid #d0d0d0 !important; padding: 16px 0 0 0; display: flex; flex-wrap: wrap; }
 .ui-tabs .ui-tabs-nav li { border-top: 0.3125em solid transparent; margin: 0; padding: 0; position: relative; top: 0; }
 .ui-tabs .ui-tabs-nav li.ui-corner-top { border-top-right-radius: 0; border-top-left-radius: 0; }
 .ui-tabs .ui-tabs-nav li.ui-state-default { background: none; background-color: transparent; color: #191919; }

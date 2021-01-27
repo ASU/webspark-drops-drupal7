@@ -13,7 +13,7 @@
 /* Default alternate desktop size: <= 992px */
 @media (max-width: 1199px) { .container { width: 100% !important; } }
 /* Default "Mobile size" <= 991px */
-@media (max-width: 991px) { div.region-content ul.ui-tabs-nav { overflow-x: scroll; display: flex; border-radius: 0; overflow-y: hidden; }
+@media (max-width: 991px) { div.region-content ul.ui-tabs-nav { overflow-x: scroll; display: flex; border-radius: 0; overflow-y: hidden; flex-wrap: nowrap; }
   .container { width: 100%; max-width: 992px; }
   #ASUNavMenu { display: none !important; }
   header#header { height: 0.25rem; }
