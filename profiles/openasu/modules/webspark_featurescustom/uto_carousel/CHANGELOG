@@ -1,11 +1,15 @@
+Webspark Carousel (uto_carousel) - 7.x-1.11
+-------------------------------------------
+- Updated ASU Carousel next/previous buttons to be more in line with Web standards 2.0
+
 Webspark Carousel (uto_carousel) - 7.x-1.10
---------------------
+-------------------------------------------
 - Cleaned up layout/spacing issues (especially on mobile)
 - Accessibility-related elements added to navigational widgets (buttons, arrows) to improve screenreader
   usability
 
 Webspark Carousel (uto_carousel) - 7.x-1.9
---------------------
+-------------------------------------------
 - Changed file browsing widget to Media module
 - Turned off carousel randomization by default
 - Improved mouseover description when a link to create an ASU spotlight is rendered in the In-Page Editor
@@ -13,6 +17,6 @@ Webspark Carousel (uto_carousel) - 7.x-1.9
 - Fixed URL in Field description link
 
 Webspark Carousel (uto_carousel) - 7.x-1.8
---------------------
+-------------------------------------------
 - Fixed bug where field settings summary was being returned as array instead of string
 - Added flexslider dependency

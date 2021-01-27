@@ -2,8 +2,8 @@ name = Innovation
 description = "Default Webspark theme that contains ASU Web Standards styling. Uses Bootstrap 3.x CSS/JS library. Is a Kalatheme subtheme."
 base theme = kalatheme
 core = 7.x
-version = "7.x-1.17"
-project = "innovation"
+version = 7.x-1.18
+project = innovation
 
 regions[header] = Header
 regions[menu] = Menu
