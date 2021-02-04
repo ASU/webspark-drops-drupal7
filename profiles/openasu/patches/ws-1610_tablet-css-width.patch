@@ -1,19 +1,37 @@
-commit 3318d87378ffdf7423b75db061eebe8c4fe7722e
-Author: Bryan R <aubjr@asu.edu>
-Date:   Mon Feb 24 23:11:02 2020 -0700
-
-    WEBSPARK-1610 - Tweaked Radix layout width for tablet layouts
-
 diff --git a/profiles/openasu/modules/contrib/radix_layouts/radix_layouts.css b/profiles/openasu/modules/contrib/radix_layouts/radix_layouts.css
-index bc41b5e2a..56fb5c89b 100644
+index 56fb5c89b..51e74c90f 100644
 --- a/profiles/openasu/modules/contrib/radix_layouts/radix_layouts.css
 +++ b/profiles/openasu/modules/contrib/radix_layouts/radix_layouts.css
-@@ -40,7 +40,7 @@
- 
- @media (min-width: 768px) {
-   .container {
--    width: 750px;
-+    min-width: 750px;
-   }
+@@ -38,7 +38,7 @@
+   clear: both;
  }
  
+-@media (min-width: 768px) {
++@media (min-width: 768px) and (max-width: 991px) {
+   .container {
+     min-width: 750px;
+   }
+diff --git a/profiles/openasu/patches/ws-1610_tablet-css-width.patch b/profiles/openasu/patches/ws-1610_tablet-css-width.patch
+index ec11befbb..e69de29bb 100644
+--- a/profiles/openasu/patches/ws-1610_tablet-css-width.patch
++++ b/profiles/openasu/patches/ws-1610_tablet-css-width.patch
+@@ -1,19 +0,0 @@
+-commit 3318d87378ffdf7423b75db061eebe8c4fe7722e
+-Author: Bryan R <aubjr@asu.edu>
+-Date:   Mon Feb 24 23:11:02 2020 -0700
+-
+-    WEBSPARK-1610 - Tweaked Radix layout width for tablet layouts
+-
+-diff --git a/profiles/openasu/modules/contrib/radix_layouts/radix_layouts.css b/profiles/openasu/modules/contrib/radix_layouts/radix_layouts.css
+-index bc41b5e2a..56fb5c89b 100644
+---- a/profiles/openasu/modules/contrib/radix_layouts/radix_layouts.css
+-+++ b/profiles/openasu/modules/contrib/radix_layouts/radix_layouts.css
+-@@ -40,7 +40,7 @@
+- 
+- @media (min-width: 768px) {
+-   .container {
+--    width: 750px;
+-+    min-width: 750px;
+-   }
+- }
+- 
