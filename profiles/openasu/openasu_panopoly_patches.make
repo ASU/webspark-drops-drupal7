@@ -105,3 +105,9 @@ projects[entity][type] = module
 projects[entity][subdir] = contrib
 projects[entity][version] = 1.9
 projects[entity][patch][] = https://www.drupal.org/files/issues/warning_array_flip-1803048-16.patch
+
+; WEBSPARK-1903
+;; Transliteration + MySQL 8.0.22+ issue fix
+projects[transliteration][version] = 3.2
+projects[transliteration][subdir] = contrib
+projects[transliteration][patch][] = https://www.drupal.org/files/issues/2021-02-05/transliteration-MySQL-8-BINARY-fix-3196961-1.patch

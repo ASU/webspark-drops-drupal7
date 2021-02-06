@@ -134,11 +134,13 @@ function transliteration_retroactive_submit($form, &$form_state) {
 function transliteration_file_query() {
   // Regular expressions are not supported by Drupal's database layer and
   // operators differ between manufacturers.
+  $field = 'uri';
   switch (db_driver()) {
     case 'mysql':
     case 'mysqli':
-      $operator = 'NOT REGEXP';
-      if (variable_get('transliteration_file_lowercase', TRUE)) {
+      $operator = ' NOT REGEXP';
+      if (variable_get('transliteration_file_lowercase', TRUE) === 1) {
+        $field = ' CAST(uri AS BINARY)';
         $operator .= ' BINARY';
       }
       $regex = '/[a-z0-9_.-]+$';
@@ -160,5 +162,5 @@ function transliteration_file_query() {
 
   return db_select('file_managed')
     ->fields('file_managed')
-    ->condition('uri', $regex, $operator);
+    ->where($field . $operator . ' :regex', array(':regex' => $regex));
 }

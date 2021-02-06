@@ -1,0 +1,27 @@
+diff --git a/profiles/openasu/modules/contrib/transliteration/transliteration.admin.inc b/profiles/openasu/modules/contrib/transliteration/transliteration.admin.inc
+index f1f5f3d34..db040ef87 100644
+--- a/profiles/openasu/modules/contrib/transliteration/transliteration.admin.inc
++++ b/profiles/openasu/modules/contrib/transliteration/transliteration.admin.inc
+@@ -134,11 +134,13 @@ function transliteration_retroactive_submit($form, &$form_state) {
+ function transliteration_file_query() {
+   // Regular expressions are not supported by Drupal's database layer and
+   // operators differ between manufacturers.
++  $field = 'uri';
+   switch (db_driver()) {
+     case 'mysql':
+     case 'mysqli':
+-      $operator = 'NOT REGEXP';
+-      if (variable_get('transliteration_file_lowercase', TRUE)) {
++      $operator = ' NOT REGEXP';
++      if (variable_get('transliteration_file_lowercase', TRUE) === 1) {
++        $field = ' CAST(uri AS BINARY)';
+         $operator .= ' BINARY';
+       }
+       $regex = '/[a-z0-9_.-]+$';
+@@ -160,5 +162,5 @@ function transliteration_file_query() {
+ 
+   return db_select('file_managed')
+     ->fields('file_managed')
+-    ->condition('uri', $regex, $operator);
++    ->where($field . $operator . ' :regex', array(':regex' => $regex));
+ }
