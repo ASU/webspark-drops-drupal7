@@ -217,6 +217,11 @@ function asu_ap_feature_views_default_views() {
       'operator' => '=',
       'value' => 'Online',
     ),
+    10 => array(
+      'title' => 'ASU@Northeastern Arizona',
+      'operator' => '=',
+      'value' => 'Northeastern Arizona',
+    ),
   );
   /* Filter criterion: Content: Degree (field_asu_ap) */
   $handler->display->display_options['filters']['field_asu_ap_value_1']['id'] = 'field_asu_ap_value_1';
@@ -616,6 +621,11 @@ function asu_ap_feature_views_default_views() {
       'operator' => '=',
       'value' => 'Online',
     ),
+    10 => array(
+      'title' => 'ASU@Northeastern Arizona',
+      'operator' => '=',
+      'value' => 'Northeastern Arizona',
+    ),
   );
   /* Filter criterion: Content: Degree (field_asu_ap) */
   $handler->display->display_options['filters']['field_asu_ap_value_1']['id'] = 'field_asu_ap_value_1';
@@ -819,6 +829,11 @@ function asu_ap_feature_views_default_views() {
       'title' => 'Online',
       'operator' => '=',
       'value' => 'Online',
+    ),
+    10 => array(
+      'title' => 'ASU@Northeastern Arizona',
+      'operator' => '=',
+      'value' => 'Northeastern Arizona',
     ),
   );
   /* Filter criterion: Content: Degree (field_asu_ap) */
@@ -1214,6 +1229,11 @@ function asu_ap_feature_views_default_views() {
       'operator' => '=',
       'value' => 'Online',
     ),
+    10 => array(
+      'title' => 'ASU@Northeastern Arizona',
+      'operator' => '=',
+      'value' => 'Northeastern Arizona',
+    ),
   );
   /* Filter criterion: Content: Degree (field_asu_ap) */
   $handler->display->display_options['filters']['field_asu_ap_value_1']['id'] = 'field_asu_ap_value_1';
@@ -1491,6 +1511,11 @@ function asu_ap_feature_views_default_views() {
       'title' => 'Online',
       'operator' => '=',
       'value' => 'Online',
+    ),
+    10 => array(
+      'title' => 'ASU@Northeastern Arizona',
+      'operator' => '=',
+      'value' => 'Northeastern Arizona',
     ),
   );
   /* Filter criterion: Content: Degree (field_asu_ap) */
