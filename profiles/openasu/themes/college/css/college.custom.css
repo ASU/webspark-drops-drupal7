@@ -217,8 +217,9 @@ blockquote .ws2-sig-title:before { padding-right: 0.5em; content: "\2014"; }
 blockquote .ws2-sig-byline { clear: left; display: block; font-weight: normal; padding-left: 1.5em; }
 blockquote.ws2-element-black a { color: #ffc627; }
 
-/* images */
+/* Images */
 img { max-width: 100%; height: auto; vertical-align: bottom; }
+div.region-content img { background: transparent linear-gradient(180deg, #19191900 0%, #191919C9 100%) 0% 0% no-repeat padding-box; }
 
 /* WYSIWYG image spacing */
 img.media-element.pull-right { margin-left: 20px; }
