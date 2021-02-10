@@ -21,6 +21,7 @@ function asu_libs_get_campus_codes($campus, $reverse = FALSE) {
     "West" => "WEST",
     'ASU@Cochise' => 'COCHS',
     'ASU@Lake Havasu' => 'CALHC',
+    'ASU@Los Angeles' => 'LOSAN',
     'ASU@MexicoCity' => 'MXCTY',
     'ASU@Northeastern Arizona' => 'NEAZ',
     'ASU@Pima' => 'PIMA',

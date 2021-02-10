@@ -473,6 +473,9 @@ if (module_exists('metatag')) {
         case 'ASU@MexicoCity':
           echo '<a href="//mexico.asu.edu">' . $campus['value'] . '</a>';
           break;
+        case 'ASU@Los Angeles':
+          echo '<a href="//admission.asu.edu/transfer/asu-los-angeles">' . $campus['value'] . '</a>';
+          break;
         case 'ASU@Northeastern Arizona':
           echo '<a href="//admission.asu.edu/transfer/asu-northeastern-arizona">' . $campus['value'] . '</a>';
           break;

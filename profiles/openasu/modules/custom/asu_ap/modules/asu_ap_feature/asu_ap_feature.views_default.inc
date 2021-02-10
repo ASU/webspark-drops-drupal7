@@ -222,6 +222,11 @@ function asu_ap_feature_views_default_views() {
       'operator' => '=',
       'value' => 'Northeastern Arizona',
     ),
+    11 => array(
+      'title' => 'ASU@Los Angeles',
+      'operator' => '=',
+      'value' => 'Los Angeles',
+    ),
   );
   /* Filter criterion: Content: Degree (field_asu_ap) */
   $handler->display->display_options['filters']['field_asu_ap_value_1']['id'] = 'field_asu_ap_value_1';
@@ -626,6 +631,11 @@ function asu_ap_feature_views_default_views() {
       'operator' => '=',
       'value' => 'Northeastern Arizona',
     ),
+    11 => array(
+      'title' => 'ASU@Los Angeles',
+      'operator' => '=',
+      'value' => 'Los Angeles',
+    ),
   );
   /* Filter criterion: Content: Degree (field_asu_ap) */
   $handler->display->display_options['filters']['field_asu_ap_value_1']['id'] = 'field_asu_ap_value_1';
@@ -834,6 +844,11 @@ function asu_ap_feature_views_default_views() {
       'title' => 'ASU@Northeastern Arizona',
       'operator' => '=',
       'value' => 'Northeastern Arizona',
+    ),
+    11 => array(
+      'title' => 'ASU@Los Angeles',
+      'operator' => '=',
+      'value' => 'Los Angeles',
     ),
   );
   /* Filter criterion: Content: Degree (field_asu_ap) */
@@ -1234,6 +1249,11 @@ function asu_ap_feature_views_default_views() {
       'operator' => '=',
       'value' => 'Northeastern Arizona',
     ),
+    11 => array(
+      'title' => 'ASU@Los Angeles',
+      'operator' => '=',
+      'value' => 'Los Angeles',
+    ),
   );
   /* Filter criterion: Content: Degree (field_asu_ap) */
   $handler->display->display_options['filters']['field_asu_ap_value_1']['id'] = 'field_asu_ap_value_1';
@@ -1516,6 +1536,11 @@ function asu_ap_feature_views_default_views() {
       'title' => 'ASU@Northeastern Arizona',
       'operator' => '=',
       'value' => 'Northeastern Arizona',
+    ),
+    11 => array(
+      'title' => 'ASU@Los Angeles',
+      'operator' => '=',
+      'value' => 'Los Angeles',
     ),
   );
   /* Filter criterion: Content: Degree (field_asu_ap) */

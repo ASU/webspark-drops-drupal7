@@ -13,6 +13,7 @@ function webform_options_campuses_all($component, $flat, $arguments) {
     'ONLNE' => t('Online'),
     'COCHS' => t('ASU@Cochise'),
     'CALHC' => t('ASU@Lake Havasu'),
+    'LOSAN' => t('ASU@Los Angeles'),
     'MXCTY' => t('ASU@MexicoCity'),
     'NEAZ' => t('ASU@Northeastern Arizona'),
     'PIMA' => t('ASU@Pima'),
