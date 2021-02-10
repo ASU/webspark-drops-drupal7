@@ -4,13 +4,15 @@ img {
   max-width: 100%;
   height: auto;
   vertical-align: bottom;
-}
-/* WYSIWYG image spacing */
-img.media-element.pull-right {
-  margin-left: 20px;
-}
-img.media-element.pull-left {
-  margin-right: 20px;
+  // WYSIWYG image spacing
+  &.media-element {
+    .pull-left {
+      margin-right: 20px;
+    }
+    .pull-right {
+      margin-left: 20px;
+    }
+  }
 }
 .img-circle,
 p.img-circle img {

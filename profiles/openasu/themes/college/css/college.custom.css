@@ -424,7 +424,7 @@ div.ctools-modal-content .dependent-options { padding-left: 2em; }
 #modal-content .form-type-checkbox { padding-left: 2em; }
 #modal-content div.preview:empty { display: none; }
 
-#modal-content .form-actions, .page-admin .form-actions, #block-system-main .node-form { background-color: #ffe9ac; border-radius: 0.25em; margin: 0 1em 1em 0; min-width: 25%; width: auto; }
+#modal-content .form-actions, .page-admin .form-actions, #block-system-main .node-form .form-actions { border-radius: 0.25em; margin: 0 1em 1em 0; min-width: 25%; width: auto; background-color: #ffe9ac;}
 
 /* Webform fixes */
 .webform-container-inline div, .webform-container-inline div.form-item { display: inline-block; /* WAS: inline */ }
