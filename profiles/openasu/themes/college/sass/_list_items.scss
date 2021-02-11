@@ -25,9 +25,15 @@ img.img-testimonial-small {
 -------------------------------------------------------------- */
 #{$ws2-content-styles-container} {
   // #1 Global list item css (non-WS2.0)
+  ul {
+    padding-left: 1em;
+  }
+  ol {
+    padding-left: 1.5em;
+  }
   ul, ol {
     li {
-      line-height: 2em;
+      margin-bottom: 2em;
       &:before {
         font-weight: bolder;
         vertical-align: middle;
@@ -44,59 +50,79 @@ img.img-testimonial-small {
       padding-left: 2em;
     }
   }
-  // WS2.0 Exception: Ordered, HOWTO stepped lists
-  ol.ws2-list-stepped {
-    // #1 Global WS2.0 list item css first
-    padding-left: 0;
-    list-style-type: none;
-    li {
-      &:before {
-        font-weight: bolder;
-        vertical-align: middle;
-      }
-      &:last-child {
-        padding-bottom: 0;
-      }
-    }
-    // #2 OL-specific CSS from WS2.0
-    & > li {
-      //line-height: 2em;
-      border-bottom: 1px solid $ws2-gray;
-      padding-bottom: 2em;
-      padding-top: 2em;
-      counter-increment: customlist;
-      &:before {
-        // global OL
-        content: counter(customlist) " ";
-        float: left;
-        // stepped list override
-        font-weight: bold;
-        font-size: 1.3125em;
-        width: 5em;
-        clip-path: circle(1rem);
-        text-align: center;
-        margin-left: -1.75em;
-      }
-      &:first-child {
-        counter-reset: customlist;
-      }
-      &:last-child {
-        border-bottom: transparent;
+  // More nested list properties
+  ol {
+    list-style-type: decimal;
+    & > ol,
+    & > li > ol {
+      list-style-type: lower-alpha;
+      & > ol,
+      & > li > ol {
+        list-style-type: upper-roman;
+        & > ol,
+        & > li > ol {
+          list-style-type: lower-roman;
+          & > ol,
+          & > li > ol {
+            list-style-type: decimal;
+          }
+        }
       }
     }
-    // Alt styling/color options
-    & > li:before,
-    &.ws2-element-maroon > li:before { // default
-      background-color: $ws2-maroon;
-      color: #fff;
-    }
-    &.ws2-element-gray > li:before {
-      background-color: $text-color;
-      color: #fff;
-    }
-    &.ws2-element-gold > li:before {
-      background-color: $ws2-gold;
-      color: $text-color;
+    // WS2.0 Exception: Ordered, HOWTO stepped lists
+    &.ws2-list-stepped {
+      // #1 Global WS2.0 list item css first
+      padding-left: 0;
+      list-style-type: none;
+      li {
+        &:before {
+          font-weight: bolder;
+          vertical-align: middle;
+        }
+        &:last-child {
+          padding-bottom: 0;
+        }
+      }
+      // #2 OL-specific CSS from WS2.0
+      & > li {
+        //line-height: 2em;
+        border-bottom: 1px solid $ws2-gray;
+        padding-bottom: 2em;
+        counter-increment: customlist;
+        &:before {
+          // global OL
+          content: counter(customlist) " ";
+          float: left;
+          // stepped list override
+          font-weight: bold;
+          font-size: 1.3125em;
+          width: 5em;
+          clip-path: circle(1rem);
+          text-align: center;
+          margin-left: -1.75em;
+        }
+        &:first-child {
+          counter-reset: customlist;
+          padding-top: 1em;
+        }
+        &:last-child {
+          border-bottom: transparent;
+        }
+      }
+      // Alt styling/color options
+      & > li:before,
+      &.ws2-element-maroon > li:before { // default
+        background-color: $ws2-maroon;
+        color: #fff;
+      }
+      &.ws2-element-gray > li:before {
+        background-color: $text-color;
+        color: #fff;
+      }
+      &.ws2-element-gold > li:before {
+        background-color: $ws2-gold;
+        color: $text-color;
+      }
     }
   }
 }

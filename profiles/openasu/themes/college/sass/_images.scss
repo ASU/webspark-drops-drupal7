@@ -4,13 +4,20 @@ img {
   max-width: 100%;
   height: auto;
   vertical-align: bottom;
+  // WYSIWYG image spacing
+  &.media-element {
+    .pull-left {
+      margin-right: 20px;
+    }
+    .pull-right {
+      margin-left: 20px;
+    }
+  }
 }
-/* WYSIWYG image spacing */
-img.media-element.pull-right {
-  margin-left: 20px;
-}
-img.media-element.pull-left {
-  margin-right: 20px;
+
+// Images and captions - backgrounds #WS2.0
+#{$ws2-content-styles-container} img {
+  background: transparent linear-gradient(180deg, #191919 0%, #191919 100%) 0% 0% no-repeat padding-box;
 }
 .img-circle,
 p.img-circle img {

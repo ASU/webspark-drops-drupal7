@@ -121,9 +121,11 @@ class ASUeAdvisorFeedFetcher extends FeedsFetcher {
     $campus_options = array(
       'ONLNE' => t('ASU Online'),
       'COCHS' => t('ASU@Cochise'),
-      'EAC' => t('ASU@TheGilaValley'),
+      'LOSAN' => t('ASU@Los Angeles'),
+      'NEAZ' => t('ASU@Northeastern Arizona'),
       'PIMA' => t('ASU@Pima'),
       'CAC' => t('ASU@Pinal'),
+      'EAC' => t('ASU@TheGilaValley'),
       'TUCSN' => t('ASU@Tucson'),
       'YAVAP' => t('ASU@Yavapai'),
       'AWC' => t('ASU@Yuma'),

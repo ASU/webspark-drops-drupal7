@@ -1437,6 +1437,9 @@ function panelizer_panels_cache_save($argument, $cache) {
   if ($entity_type == 'default') {
     list($entity_type, $bundle, $name) = @explode(':', $key, 3);
     $get_default = TRUE;
+    // Customize this page, "You do not have access" error patch, WCS-3431
+    // https://www.drupal.org/project/panelizer/issues/2864607
+    $cache->display->storage_type = 'panelizer_default';
   }
 
   $handler = panelizer_entity_plugin_get_handler($entity_type);

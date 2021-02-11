@@ -11,16 +11,18 @@ function webform_options_campuses_all($component, $flat, $arguments) {
     'POLY' => t('Polytechnic'),
     'WEST' => t('West'),
     'ONLNE' => t('Online'),
+    'COCHS' => t('ASU@Cochise'),
     'CALHC' => t('ASU@Lake Havasu'),
+    'LOSAN' => t('ASU@Los Angeles'),
+    'MXCTY' => t('ASU@MexicoCity'),
+    'NEAZ' => t('ASU@Northeastern Arizona'),
+    'PIMA' => t('ASU@Pima'),
+    'CAC' => t('ASU@Pinal'),
     'EAC' => t('ASU@The Gila Valley'),
     'TUCSN' => t('ASU@Tucson'),
-    'CAC' => t('ASU@Pinal'),
     'YAVAP' => t('ASU@Yavapai'),
-    'AWC' => t('ASU@Yuma'),
-    'MXCTY' => t('ASU@MexicoCity'),
-    'COCHS' => t('ASU@Cochise'),
     'WASHD' => t('ASU@Washington, D.C.'),
-    'PIMA' => t('ASU@Pima'),
+    'AWC' => t('ASU@Yuma'),
   );
 }
 

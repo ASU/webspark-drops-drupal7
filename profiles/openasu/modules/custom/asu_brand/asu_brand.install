@@ -135,38 +135,38 @@ function asu_brand_update_7201(&$sandbox) {
  * Delete all legacy asu_brand_students_footer blocks, just in case they still exist anywhere.
  * @param $sandbox
  */
-function asu_brand_update_7202(&$sandbox) {
-  $module = 'asu_brand';
-  $delta = 'asu_brand_students_footer';
-  $result = db_select('block', 'b')
-    ->fields('b', array('bid'))
-    ->condition('module', $module)
-    ->condition('delta', $delta)
-    ->orderBy('bid')
-    ->execute();
-  $block_ids = $result->fetchCol();
-
-  foreach ($block_ids as $bid) {
-    db_delete('block_custom')
-      ->condition('bid', $bid)
-      ->execute();
-    db_delete('block')
-      ->condition('module', $module)
-      ->condition('delta', $delta)
-      ->execute();
-    db_delete('block_role')
-      ->condition('module', $module)
-      ->condition('delta', $delta)
-      ->execute();
-    db_delete('block_node_type')
-      ->condition('module', $module)
-      ->condition('delta', $delta)
-      ->execute();
-  }
-  $message = 'An attempt to delete any legacy students footer blocks has been made. If any remained, they should be deleted now.';
-  watchdog('asu_brand', $message);
-  drupal_set_message($message, 'status', FALSE);
-}
+//function asu_brand_update_7202(&$sandbox) {
+//  $module = 'asu_brand';
+//  $delta = 'asu_brand_students_footer';
+//  $result = db_select('block', 'b')
+//    ->fields('b', array('bid'))
+//    ->condition('module', $module)
+//    ->condition('delta', $delta)
+//    ->orderBy('bid')
+//    ->execute();
+//  $block_ids = $result->fetchCol();
+//
+//  foreach ($block_ids as $bid) {
+//    db_delete('block_custom')
+//      ->condition('bid', $bid)
+//      ->execute();
+//    db_delete('block')
+//      ->condition('module', $module)
+//      ->condition('delta', $delta)
+//      ->execute();
+//    db_delete('block_role')
+//      ->condition('module', $module)
+//      ->condition('delta', $delta)
+//      ->execute();
+//    db_delete('block_node_type')
+//      ->condition('module', $module)
+//      ->condition('delta', $delta)
+//      ->execute();
+//  }
+//  $message = 'An attempt to delete any legacy students footer blocks has been made. If any remained, they should be deleted now.';
+//  watchdog('asu_brand', $message);
+//  drupal_set_message($message, 'status', FALSE);
+//}
 
 /**
  * Rename any unshared ASU Brand header block settings to separate them between WS1.0 and WS2.0

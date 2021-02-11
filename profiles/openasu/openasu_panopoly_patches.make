@@ -34,6 +34,7 @@ projects[date][patch][2889759] = https://www.drupal.org/files/issues/date-php7Of
 projects[date][patch][2995679] = https://www.drupal.org/files/issues/2018-08-28/date-array_conversion-2995679-2-D7.patch
 projects[date][patch][2843367-1] = https://www.drupal.org/files/issues/2019-01-16/2843367-php71-string-offset-47.patch
 projects[date][patch][2843367-2] = https://www.drupal.org/files/issues/2843367-php71-string-offset-26.patch
+projects[date][patch][3145639] = https://www.drupal.org/files/issues/2020-06-04/date-php74-3145639-2.patch
 
 ; panopoly_admin.make
 
@@ -104,3 +105,9 @@ projects[entity][type] = module
 projects[entity][subdir] = contrib
 projects[entity][version] = 1.9
 projects[entity][patch][] = https://www.drupal.org/files/issues/warning_array_flip-1803048-16.patch
+
+; WEBSPARK-1903
+;; Transliteration + MySQL 8.0.22+ issue fix
+projects[transliteration][version] = 3.2
+projects[transliteration][subdir] = contrib
+projects[transliteration][patch][] = https://www.drupal.org/files/issues/2021-02-05/transliteration-MySQL-8-BINARY-fix-3196961-1.patch

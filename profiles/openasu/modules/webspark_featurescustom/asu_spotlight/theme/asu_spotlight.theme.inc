@@ -50,11 +50,13 @@ function theme_asu_spotlight_list_item(&$vars) {
   $overlaytextwidth = (isset($item['overlaytextwidth'])) ? check_plain($item['overlaytextwidth']) : 'full-width';
   $description = (isset($item['description'])) ? check_markup($item['description']) : '';
   $position = (isset($item['position'])) ? check_plain($item['position']) : '';
-  $title_string = check_plain($item['title']);
+  $title_string = $item['title'];
+  $clean = FALSE;
   if(!empty($item['link'])) {
     $title_string = l($title_string, $item['link']);
+    $clean = TRUE; // l() sanitizes the output
   }
-  $title_string = '<h1>' . $title_string . '</h1>';
+  $title_string = ($clean === FALSE) ? '<h1>' . check_plain($title_string) . '</h1>' : '<h1>' . $title_string . '</h1>';
 
   $list_item = '<li' . drupal_attributes($vars['settings']['attributes']) . '>' .
     '<div class="slidecontainer" position="relative">' . $vars['package']['slide'] .

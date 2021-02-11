@@ -1,0 +1,7 @@
+<?php
+/**
+ * Updates the Webspark help menu link
+ */
+function webspark_extras_update_7000(&$sandbox) {
+  features_rebuild(array('webspark_extras' => array('content_menu_links')));
+}
