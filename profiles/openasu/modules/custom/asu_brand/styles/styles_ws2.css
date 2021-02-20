@@ -44,7 +44,8 @@
   .innovation-image { width: 48%; }
   #innovation-bar .innovation-status { padding-right: 20px; }
   #innovation-bar .innovation-top, #innovation-footer .footer-menu .nav ul { width: auto; } }
-@media screen and (max-width: 992px) { body #innovation-footer .footer-menu ul.default li a { margin-right: 0; }
+@media screen and (max-width: 992px) {
+  body #innovation-footer .footer-menu ul.default li a { margin-right: 0; }
   #innovation-bar { padding: 1.3em 0; }
   #innovation-bar img { max-width: 100%; }
   #innovation-bar .innovation-top { width: 100%; display: flex; flex-direction: column; margin: 0 auto; }
@@ -63,7 +64,12 @@
   #innovation-footer ul::before { content: inherit; }
   .innovation-image { border-bottom: 0; float: left; order: 1; width: 100%; }
   .mb-left { display: block; float: left; }
-  .mb-right { display: block; float: right; } }
+  .mb-right { display: block; float: right; }
+  .navbar-component .uds-menu-lvl3 { margin-left: 2rem; }
+  .navbar-component .uds-mobile-menu-heading { font-weight: bold; }
+  .navbar-component .navlist .menu-column { padding-right: 3rem !important; }
+}
 @media all and (min-width: 992px) { #headerContainer header { position: relative; }
   #headerContainer header.scrolled { border-bottom: none; }
-  .navbar-component { display: none !important; } }
+  .navbar-component { display: none !important; }
+}

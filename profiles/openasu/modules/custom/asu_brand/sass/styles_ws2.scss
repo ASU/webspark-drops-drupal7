@@ -190,7 +190,7 @@
   }
 }
 
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 991px) {
   body #innovation-footer .footer-menu ul.default li a {
     margin-right: 0;
   }
@@ -287,6 +287,14 @@
   .mb-right {
     display: block;
     float: right;
+  }
+  .navbar-component {
+    .uds-menu-lvl3 {
+      margin-left: 2rem;
+    }
+    .uds-mobile-menu-heading {
+      font-weight: bold;
+    }
   }
 }
 
