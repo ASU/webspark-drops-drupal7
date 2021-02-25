@@ -111,3 +111,9 @@ projects[entity][patch][] = https://www.drupal.org/files/issues/warning_array_fl
 projects[transliteration][version] = 3.2
 projects[transliteration][subdir] = contrib
 projects[transliteration][patch][] = https://www.drupal.org/files/issues/2021-02-05/transliteration-MySQL-8-BINARY-fix-3196961-1.patch
+
+; WEBSPARK-1917
+;; Field Ellipsis - Remove endline characters
+projects[field_ellipsis][version] = 1.4
+projects[field_ellipsis][subdir] = contrib
+projects[field_ellipsis][patch][] = patches/ws-1917_field-ellipsis_remove-newlines.patch

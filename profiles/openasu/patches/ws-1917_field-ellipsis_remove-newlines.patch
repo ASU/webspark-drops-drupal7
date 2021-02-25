@@ -1,0 +1,13 @@
+diff --git a/field_ellipsis.module b/field_ellipsis.module
+index 8873e7c7e..03d412b51 100644
+--- a/field_ellipsis.module
++++ b/field_ellipsis.module
+@@ -120,6 +120,8 @@ function field_ellipsis_field_formatter_view($entity_type, $entity, $field, $ins
+  *    The truncated and ellipsis'd string.
+  */
+ function theme_field_ellipsis($variables) {
++    // WEBSPARK-1917 -- Clean away hidden newlines and return carriages
++    $variables['text'] = str_replace(array("\n", "\r"), '', $variables['text']);
+     $trim = truncate_utf8(strip_tags($variables['text'], $variables['allowed_tags']), $variables['trim_length'], TRUE, TRUE);
+     return '<p>' . $trim . '</p>';
+ }
