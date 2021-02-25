@@ -1,7 +1,7 @@
 name = "ASU Feeds"
 ; Module formerly known as "ASU Feeds 2"
 description = "Integrates ASU data into Drupal and the Feeds module."
-version = 7.x-3.1
+version = 7.x-3.2
 ; Added to staging module package
 package = ASU
 core = 7.x

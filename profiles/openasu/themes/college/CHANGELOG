@@ -1,7 +1,16 @@
+College (v1.4) - 2021-02-24
+---------------------------
+- Web standards 2.0 compliance improvements
+  - Ordered and unordered list styling closer to WS2.0 standard
+  - Added <img> background styling (shows a gradient when no image is loaded)
+  - Updated background images to correct (and smaller file size) versions
+- Fixed form edit buttons when College theme is used when editing content
+- Updated styling rules for WYSIWYG left/right alignment of images
+
 College (v1.3) - 2021-01-27
 ---------------------------
 - Pager brought into alignment with Web standards 2.0
-- Re-added core Google Tag Manager and Cookie Consent code (fixed regression)
+- Re-added core Google Tag Manager and Cookie Consent code (fixed regression in Jacksonville release)
 
 College (v1.2) - 2021-01-17
 ---------------------------

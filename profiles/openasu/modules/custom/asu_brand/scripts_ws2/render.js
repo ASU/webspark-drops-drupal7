@@ -5,9 +5,8 @@
     attach: function (context, settings) {
       // console.log(JSON.parse(Drupal.settings.asu_brand.navTree));
 
-      var loginInfo = AsuWebcore.checkSSOCookie();
-
-      AsuWebcore.RenderPreact(AsuWebcore.Header, {
+      var loginInfo = componentsLibrary.checkSSOCookie();
+      componentsLibrary.RenderPreact(componentsLibrary.Header, {
         navTree: JSON.parse(Drupal.settings.asu_brand.navTree),
         title: Drupal.settings.asu_brand.siteName,
         subtitle: Drupal.settings.asu_brand.siteSubtitle,

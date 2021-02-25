@@ -19,6 +19,8 @@ projects[panelizer][patch][1549608] = https://www.drupal.org/files/issues/paneli
 projects[panelizer][patch][2788851] = https://www.drupal.org/files/issues/panelizer-administer-panelizer-2788851-2.patch
 ; WEBSPARK-1033 - In panelizer dev branch on drupal.org; Will go into v3.5
 projects[panelizer][patch][2843119] = https://www.drupal.org/files/issues/panelizer-undefined_index-2843119-D7_2.patch
+; WEBSPARK-1910 - You do not have access error fix
+projects[panelizer][patch][2864607] = https://www.drupal.org/files/issues/panelizer-storage_type_issue-2864607-1.patch
 
 projects[token][version] = 1.7
 projects[token][subdir] = contrib
@@ -111,3 +113,9 @@ projects[entity][patch][] = https://www.drupal.org/files/issues/warning_array_fl
 projects[transliteration][version] = 3.2
 projects[transliteration][subdir] = contrib
 projects[transliteration][patch][] = https://www.drupal.org/files/issues/2021-02-05/transliteration-MySQL-8-BINARY-fix-3196961-1.patch
+
+; WEBSPARK-1917
+;; Field Ellipsis - Remove endline characters
+projects[field_ellipsis][version] = 1.4
+projects[field_ellipsis][subdir] = contrib
+projects[field_ellipsis][patch][] = patches/ws-1917_field-ellipsis_remove-newlines.patch

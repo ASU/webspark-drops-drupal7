@@ -1,3 +1,8 @@
+### ASU Libraries Volume One 7.x-1.2, 2021-02-24
+- Added the following campuses to campus lists:
+  - ASU@Los Angeles
+  - ASU@Northeastern Arizona
+
 ### ASU Libraries Volume One 7.x-1.1, 2020-05-15
 - Added basic ASU Enterprise environment availability detection for use when ASU Enterprise webhosting assets need to
   be available

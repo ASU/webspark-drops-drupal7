@@ -120,11 +120,11 @@ function asu_brand_get_asset_content($cache_id, $file_path, $version, $reset = F
           'js' => array(
             array(
               'type' => 'file',
-              'data' => $module_path . '/scripts_ws2/vendor.production.js',
+              'data' => $module_path . '/scripts_ws2/vendor.js',
             ),
             array(
               'type' => 'file',
-              'data' => $module_path . '/scripts_ws2/core.production.js',
+              'data' => $module_path . '/scripts_ws2/components-library.js',
             ),
             array(
               'type' => 'file',

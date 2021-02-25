@@ -1,3 +1,10 @@
+Webspark Extras 7.x-1.9, 2021-02-24
+-----------------------------------
+- Added the following campuses to campus lists:
+  - ASU@Los Angeles
+  - ASU@Northeastern Arizona
+- Updated Webspark help menu link
+
 Webspark Extras 7.x-1.8, 2020-10-28
 -----------------------------------
 - Updated Quicktabs animation to match the Web Standards 2 Limited design
