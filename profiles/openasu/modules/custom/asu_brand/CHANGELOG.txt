@@ -1,4 +1,8 @@
-CHANGELOG for ASU Brand module for Drupal 7
+ASU Brand module - CHANGELOG
+
+7.x-2.2 2021-02-24
+------------------
+- Rolled back hook_update_7202 that deletes old, legacy students footer block
 
 7.x-2.1 2020-10-28
 -------------------

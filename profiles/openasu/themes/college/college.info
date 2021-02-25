@@ -4,7 +4,7 @@ name = College
 description = New Web Standards 2.0 LIMITED (WS2L) theme to replace Innovation in Drupal 7's Webspark.
 core = 7.x
 base theme = kalatheme
-version = 7.x-1.3
+version = 7.x-1.4
 engine = phptemplate
 screenshot = screenshot.png
 

@@ -1,4 +1,8 @@
-ASY Spotlight 7.x-1.12, 2021-01-17
+ASU Spotlight 7.x-1.13, 2021-02-24
+----------------------------------
+- No longer double-encodes special characters in slide titles when the titles are links
+
+ASU Spotlight 7.x-1.12, 2021-01-17
 ----------------------------------
 - Updated font-weight from 900 to 700 for bold output to keep Windows-based browsers from implementing
   the Arial Black font (and break Web standards 2.0).

@@ -1,6 +1,6 @@
 name = ASU Brand
 description = "Provides ASU header and footer blocks without the use of an ASU based theme."
-version = 7.x-2.1
+version = 7.x-2.2
 core = 7.x
 package = ASU
 project status url = "https://webconsulting.asu.edu/fserver"

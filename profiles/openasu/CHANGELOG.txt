@@ -1,3 +1,61 @@
+Webspark 1.79 (Michigan), 2021-02-24
+---------------------------------------
+- Webspark core updates
+
+  * Panopoly - v1.79+patch
+    - Multiple Panopoly releases (1.77-1.79) rolled into this update; See
+      https://www.drupal.org/project/panopoly/releases/7.x-1.79 for details, including the list
+      of updated contributed projects.
+    - The following Panopoly modules were re-patched with Webspark customizations
+      - Panopoly Test
+      - Panopoly Theme
+      - Panopoly WYSIWYG
+
+- Web standards components in Webspark
+
+  * ASU Academic Programs (asu_ap) - v3.2
+    - Added unique classes to the gold RFI buttons in ASU AP pages for analytics tracking
+    - Incorporated SASS into theming
+    - Added styling to degree description elements
+
+  * ASU Brand (asu_brand) - v2.2
+    - Rolled back hook_update_7202 that deletes old, legacy students footer block
+
+  * ASU Spotlight (asu_spotlight) - v1.13
+    - No longer double-encodes special characters in slide titles when the titles are links
+
+  * College (college) - v1.4
+    - Web standards 2.0 compliance improvements
+      - Ordered and unordered list styling closer to WS2.0 standard
+      - Added <img> background styling (shows a gradient when no image is loaded)
+      - Updated background images to updated (and smaller file sized) versions
+    - Fixed form edit buttons when College theme is used when editing content
+    - Refactored styling for WYSIWYG left/right alignment of images
+
+  * Webspark Extras (webspark_extras) - v1.9
+    - Updated Webspark help menu link
+
+  * ASU Academic Programs (asu_ap) - v3.2,
+    ASU Feeds (asu_feeds2) - v3.2,
+    ASU Libraries Volume One (asu_libs) - v1.2,
+    Webspark Extras (webspark_extras) - v1.9
+    - Added the following campuses to campus lists:
+      - ASU@Los Angeles
+      - ASU@Northeastern Arizona
+
+- Contrib module updates
+
+  - Managed by Panopoly
+
+    * Field Ellipsis (field_ellipsis) - v1.4+patch
+      - Now strips out newlines when attaching ellipsis at end of text
+    * Panelizer (panelizer) - v3.4+patch
+      - Fixed Panelizer IPE Customize this page button 'You do not have access' errors
+    * Radix Layouts (radix_layouts) - v3.4+patch
+      - Width fix for columns in tablet-sized browser windows is now capped at 991px (fixes min-width regression for larger browser window widths in Big Spring release (v1.70.8))
+    * Transliteration (transliteration) - v3.2+patch
+      - Fixed MySQL compatibility issue with MySQL v8.0.22+ (more information available at https://drupal.org/node/3196961)
+
 Webspark 1.76.4 (Wacahoota), 2020-11-30
 ---------------------------------------
 - Webspark core updates

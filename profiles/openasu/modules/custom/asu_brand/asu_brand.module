@@ -464,7 +464,9 @@ function _asu_brand_create_json() {
   $defaultMenu = asu_brand_get_site_menu_array(); // Default menu array compatible with WS1
 //  dpm($defaultMenu);
   $ws2Menu = _asu_brand_create_ws2l_menu($defaultMenu); // New menu array compatible with WS2
-  return json_encode($ws2Menu); // JSON encoded string of WS2-compatible menu array
+//  dpm($ws2Menu, '$ws2Menu');
+  $j = json_encode($ws2Menu);
+  return $j; // JSON encoded string of WS2-compatible menu array
 }
 
 /**
@@ -485,45 +487,43 @@ function _asu_brand_create_ws2l_menu($menu_tree, $level = 0) {
 
   // Iterate through entire menu with each leaf acting as a subtree
   foreach ($menu_tree as $menu_subtree) {
-    // Temporary array that holds correct subtree
-    $ws2_compat_subtree = array();
-    // Flag that determines if subtree contains a heading (which determines array flattening procedures)
-    $headerFound = FALSE;
-    // Temporary array that holds subtree contents as flattened array of equal depth (instead of as children)
-    $flattened_subtree = array();
+    $ws2_compat_subtree = array(); // WS2.0-compatible subtree
+    $headerFound = FALSE; // Subtree contains a heading (which determines array flattening procedures)?
+    $flattened_subtree = array(); // Subtree contents as flattened array of equal depth (instead of as children)
+    $menu_subtree['path'] = (!isset($menu_subtree['path'])) ? '' : $menu_subtree['path']; // Make sure path is set even when empty
+    $ws2_compat_subtree['href'] = $menu_subtree['path']; // WS2.0-compatible path entry
 
-    // A - Checks if menu entry has a title
+    // A - Converts to WS2.0-compatible title entry
     if (isset($menu_subtree['title'])) {
-      $ws2_compat_subtree['text'] = $menu_subtree['title']; // Add title to temp array as corresponding entry for WS2 tree structure (i.e. 'text')
+      $ws2_compat_subtree['text'] = $menu_subtree['title'];
+    }
+    // B - If no valid path is set, treat as header(??)
+    if (!(strlen($menu_subtree['path']) > 0 || $menu_subtree['path'] === '#')) {
+      $headerFound = TRUE; // Is heading
+      $ws2_compat_subtree['class'] = 'uds-mobile-menu-heading'; // Adds WS2.0 heading class
     }
 
-    // B - Checks if menu entry has path and whether path is actually useful (e.g. has actual characters to redirect to)
-    if (isset($menu_subtree['path']) && strlen($menu_subtree['path']) > 0) {
-      $ws2_compat_subtree['href'] = $menu_subtree['path']; // Add link path to temp array as corresponding entry for WS2 tree structure (i.e. 'href')
-    } else { // If there is no path, then it is not clickable and therefore acts as a menu heading
-      $ws2_compat_subtree['class'] = 'uds-mobile-menu-heading'; // Set temp array type as heading to correspond to WS2 tree structure
-//      $headerFound = TRUE; // Sets flag to true since heading has now been found
-    }
-
-    // C - Checks if menu entry has children which thereby contains other menu entries
+    // C - Does menu entry has children (has a submenu)
     if (isset($menu_subtree['children']) && is_array($menu_subtree['children'])) {
       // If heading was found, then array flattening is necessary
-//      if ($headerFound) {
-//        // Recursive call with menu subtree acting as new subtree to repeat process, which is then stored other temp
-//        // array to be integrated separately
-//        $level = 1;
-//        $flattened_subtree = _asu_brand_create_ws2l_menu($menu_subtree['children'], $level);
-//
-//      } // If no heading is found, maps children to correspond to WS2 tree structure
-//      else {
-        $level = 2;
-        // Recursive call with menu subtree acting as new subtree to repeat process, which is stored in child array of temp array
+      if ($headerFound) {
+        // Recursive call with menu subtree acting as new subtree to repeat process,
+        // which is then stored in temp array
+        $level++;
+        if ($level === 2) { // 3rd level? Flatten out
+          $flattened_subtree = _asu_brand_create_ws2l_menu($menu_subtree['children'], $level);
+        } else { // Recursive rebuilding for 1st or 2nd level, with menu subtree acting as new "menu tree" to repeat process.
+          $ws2_compat_subtree['items'][] = _asu_brand_create_ws2l_menu($menu_subtree['children'], $level);
+        }
+      } else { // Recursive rebuilding for 1st or 2nd level, with menu subtree acting as new "menu tree" to repeat process.
+        $level++;
         $ws2_compat_subtree['items'][] = _asu_brand_create_ws2l_menu($menu_subtree['children'], $level);
-//      }
+      }
     }
 
-    // Integrates properly mapped child array using counter defined above
+    // Attaches child array
     $ws2_compat_menu[$tree_length_counter] = $ws2_compat_subtree;
+//    dpm($ws2_compat_menu, __FUNCTION__ . ' - level ' . $level . ' - TLC: ' . $tree_length_counter);
     $tree_length_counter++; // Iterate counter
 
     // Checks if header found to being flattened array integration
@@ -533,8 +533,10 @@ function _asu_brand_create_ws2l_menu($menu_tree, $level = 0) {
         $tree_length_counter++; // Iterate through counter again to account for new entries
       }
     }
-    // Reset menu level with each iteration of top-level menu items
-    $level = 0;
+    // Reset menu level to 1st level
+    if ($level > 0) {
+      $level--;
+    }
   }
 
   return $ws2_compat_menu; // Return properly structured menu tree for JSON encoding

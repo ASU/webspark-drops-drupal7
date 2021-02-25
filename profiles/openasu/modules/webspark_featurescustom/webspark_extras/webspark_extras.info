@@ -4,7 +4,7 @@ description = "Contains miscellaneous Webspark customizations/settings that do n
 ; cleanup content page, accordion settings, video help text.
 core = 7.x
 package = ASU Webspark
-version = 7.x-1.8
+version = 7.x-1.9
 project = webspark_extras
 required = TRUE
 dependencies[] = ctools

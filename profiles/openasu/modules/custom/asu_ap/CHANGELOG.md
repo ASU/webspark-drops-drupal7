@@ -1,4 +1,10 @@
-# ASU Academic Programs Changelog
+### ASU Academic Programs 7.x-3.2, 2021-02-24
+- Added unique classes to the gold RFI buttons in ASU AP pages for analytics tracking
+- Incorporated SASS into theming
+- Added styling to degree description elements
+- Added the following campuses to campus lists:
+  - ASU@Los Angeles
+  - ASU@Northeastern Arizona
 
 ### ASU Academic Programs 7.x-3.1, 2020-05-15
 - The ASU@Lake Havasu campus link now works
