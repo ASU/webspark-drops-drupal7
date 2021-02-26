@@ -341,6 +341,13 @@ function asu_brand_update_7205(&$sandbox) {
 }
 
 /**
+ * Turn on SIGN IN redirection back to referring page (vs. home page of the site)
+ */
+function asu_brand_update_7206(&$sandbox) {
+  variable_set('asu_brand_attach_dest_url', 1);
+}
+
+/**
  * Manages (adds or removes) permissions for ASU Brand
  * @param $action - Add or remove ASU Brand permissions.
  */

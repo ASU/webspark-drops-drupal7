@@ -111,6 +111,14 @@ function asu_brand_get_asset_content($cache_id, $file_path, $version, $reset = F
     // Render WS2.0 header w/Preact
     if ($cache_id === 'asu_brand:header_ws2') {
       global $base_url;
+      // Add originating page as destination to login URL.
+      $cas_login_link = $base_url . '/cas';
+      if (variable_get('asu_brand_attach_dest_url', 1) === 1) {
+        $path = request_path();
+        if (!empty($path)) {
+          $cas_login_link .= '?destination=' . $path;
+        }
+      }
       $output = array(
         '#markup' => '<div id="headerContainer"></div>',
         '#attached' => array(
@@ -136,7 +144,7 @@ function asu_brand_get_asset_content($cache_id, $file_path, $version, $reset = F
                 'siteName' => variable_get('site_name'),
                 'siteSubtitle' => variable_get('site_slogan'),
                 'isLoggedIn' => user_is_logged_in(),
-                'casLoginLink' => $base_url . '/cas',
+                'casLoginLink' => $cas_login_link,
                 'casLogoutLink' => $base_url . '/caslogout',
                 'navTree' => _asu_brand_create_json(),
               )),

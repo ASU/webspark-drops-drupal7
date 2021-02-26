@@ -11,6 +11,7 @@
  * @return mixed
  */
 function asu_brand_get_block_configure_form($delta) {
+
   $form['asu_brand'] = array(
       '#type' => 'fieldset',
       '#title' => t('ASU Brand settings'),
@@ -114,9 +115,9 @@ function asu_brand_get_block_configure_form($delta) {
       // Login URL alteration/override blocking
       $form['asu_brand']['do_not_override'] = array(
         '#type' => 'fieldset',
-        '#title' => t('Block login URL alteration'),
-        '#description' => t('The ASU Brand module will not override the login URL'
-          . ' with the CAS module path for any of the following hostnames.'),
+        '#title' => t('Altering the Login URL'),
+        '#description' => t('Configure which domains to not override the login URL'
+          . ' or whether successful logins are redirected to the referrer or home page.'),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
       );
@@ -127,9 +128,18 @@ function asu_brand_get_block_configure_form($delta) {
 
       $form['asu_brand']['do_not_override']['asu_brand_do_not_override'] = array(
         '#type' => 'textarea',
-        '#title' => t('Do Not Override List'),
-        '#description' => t('Host names, separated by commas.'),
+        '#title' => t('Domains to NOT Override Login URLs'),
+        '#description' => t('The ASU Brand module will not override the login URL'
+          . ' with the CAS module path for any of the hostnames entered below.'
+          . ' SEPARATE EACH HOST NAME BY COMMA. Examples: www.asu.edu,yoursite.lab.asu.edu'),
         '#default_value' => $fstring,
+      );
+      $form['asu_brand']['do_not_override']['asu_brand_attach_dest_url'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Return to last page upon login'),
+        '#description' => t('If checked, the site will return successfully logged in users to the'
+          . ' page they came from, instead of the home page of the site.'),
+        '#default_value' => variable_get('asu_brand_attach_dest_url', 1),
       );
 
       // No longer options......
@@ -238,11 +248,11 @@ function asu_brand_admin_settings($form, &$form_state) {
  */
 function _asu_brand_admin_settings_submit($form, &$form_state) {
   variable_set('asu_brand_header_version', $form_state['values']['ws_version']);
-    module_load_include('inc', 'asu_brand', 'includes/asu_brand.theme_update');
-    $ws_data = ($form_state['values']['ws_version'] === '5.0')
-      ? asu_brand_get_ws_data('college')
-      : asu_brand_get_ws_data('innovation');
-    asu_brand_block_theme_update('__standalone__', $ws_data);
-    // Flush ASU Brand caches so updated ASU header/footer (and any other related blocks) are right
-    asu_brand_cache_clear();
+  module_load_include('inc', 'asu_brand', 'includes/asu_brand.theme_update');
+  $ws_data = ($form_state['values']['ws_version'] === '5.0')
+    ? asu_brand_get_ws_data('college')
+    : asu_brand_get_ws_data('innovation');
+  asu_brand_block_theme_update('__standalone__', $ws_data);
+  // Flush ASU Brand caches so updated ASU header/footer (and any other related blocks) are right
+  asu_brand_cache_clear();
 }

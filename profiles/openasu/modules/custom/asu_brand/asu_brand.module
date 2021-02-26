@@ -200,7 +200,7 @@ function asu_brand_block_save($delta = '', $edit = array()) {
       variable_set($delta . '_parent_org_title', $edit['asu_brand_parent_org_title']);
       variable_set($delta . '_parent_org_url', $edit['asu_brand_parent_org_url']);
       variable_set($delta . '_override_url', $edit['asu_brand_override_url']);
-      variable_set($delta . '_expand_on_hover', $edit['asu_brand_expand_on_hover']);
+      variable_set('asu_brand_attach_dest_url', $edit['asu_brand_attach_dest_url']);
 
       asu_brand_cache_clear();
       break;
