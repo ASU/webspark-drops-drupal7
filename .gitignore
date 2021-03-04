@@ -85,3 +85,7 @@ profiles/openasu/modules/**/behat/behat.local.yml
 # Panopoly core for testing Panopoly
 ######################
 profiles/panopoly
+
+# Node.js generated files
+######################
+node_modules
