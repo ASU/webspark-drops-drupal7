@@ -8,6 +8,7 @@
  * Implements hook_libraries_info().
  */
 function kalatheme_libraries_info() {
+  // @TODO integrate WS2.0 College theme Bootstrap file locations here.
   $libraries = array();
   $libraries[KALATHEME_BOOTSTRAP_LIBRARY] = array(
     'name' => 'Twitter Bootstrap',
@@ -110,18 +111,31 @@ function kalatheme_get_grid_size() {
  */
 function _kalatheme_load_grid_size() {
   $default_column_count = 12;
-  // Load in the Bootstrap css file.
-  $bootstrap_directory = libraries_get_path(KALATHEME_BOOTSTRAP_LIBRARY);
-  if (!$bootstrap_directory) {
-    return $default_column_count;
-  }
-  $bootstrap_file = $bootstrap_directory . '/css/bootstrap.min.css';
-  if (!file_exists($bootstrap_file)) {
-    $bootstrap_file = $bootstrap_directory . '/css/bootstrap.css';
-    if (!file_exists($bootstrap_file)) {
+  // The WS2L theme (College) moved the location of the Bootstrap library contents into the College theme.
+  // The Bootstrap library file is just a shell CSS file, so ignore it.
+  if (module_exists('webspark_featurescustom')) {
+    if (_webspark_featurescustom_web_standards_theme_check('', 2) !== 0) {
+      $bootstrap_directory = drupal_get_path('theme', 'college');
+      $bootstrap_file = $bootstrap_directory . '/css/college.core-bootstrap.css';
+      if (!file_exists($bootstrap_file)) {
+        return $default_column_count;
+      }
+    }
+  } else {
+    // Load in the default Bootstrap css file from the BS3.x library directory.
+    $bootstrap_directory = libraries_get_path(KALATHEME_BOOTSTRAP_LIBRARY);
+    if (!$bootstrap_directory) {
       return $default_column_count;
     }
+    $bootstrap_file = $bootstrap_directory . '/css/bootstrap.min.css';
+    if (!file_exists($bootstrap_file)) {
+      $bootstrap_file = $bootstrap_directory . '/css/bootstrap.css';
+      if (!file_exists($bootstrap_file)) {
+        return $default_column_count;
+      }
+    }
   }
+
   $bootstrap_contents = file_get_contents($bootstrap_file);
   // Find the largest column size.
   $column_sizes = array();
@@ -135,6 +149,5 @@ function _kalatheme_load_grid_size() {
     $column_size = (int)$column_size;
   }
   sort($column_sizes);
-
   return array_pop($column_sizes);
 }
