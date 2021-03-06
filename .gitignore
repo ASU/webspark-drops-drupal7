@@ -84,3 +84,6 @@ profiles/openasu/modules/**/behat/behat.local.yml
 ######################
 profiles/panopoly
 
+# Node.js generated files
+######################
+node_modules

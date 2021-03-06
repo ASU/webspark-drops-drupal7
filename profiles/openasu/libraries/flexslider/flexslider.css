@@ -29,7 +29,11 @@
 .slides,
 .slides > li,
 .flex-control-nav,
-.flex-direction-nav {
+.flex-direction-nav,
+.flexslider .slides,
+.flexslider .slides > li,
+.flexslider .flex-control-nav,
+.flexslider .flex-direction-nav {
   margin: 0;
   padding: 0;
   list-style: none;
