@@ -1,3 +1,24 @@
+Webspark 1.79.1 (Vulcan), 2021-03-12
+------------------------------------
+- Webspark core updates
+  * Drupal core - v7.78+patch5
+    * Added Node.js files to .gitignore
+
+- Web standards components in Webspark
+
+  * ASU Brand (asu_brand) - v2.3
+    - Upon logging in, CAS users now return to their last visited page (vs. the default home page).
+    - Added configuration to toggle the above described behavior on/off under the WS2.0 Header block settings
+  * College (college) - v1.5
+    - Compressed all Bootstrap CSS files for better performance
+
+- Contrib project updates
+
+  - Managed by Webspark
+    - Kalatheme (kalatheme) - v3.0-rc2+patch7
+      - Permanently resolved has_js notices in security scan reports
+      - Now checks for WS2.0 themes to get correct location of Bootstrap files to correctly count the number of columns and resolve a Views Grid layout issue
+
 Webspark 1.79 (Michigan), 2021-02-24
 ------------------------------------
 - Webspark core updates
