@@ -83,6 +83,13 @@ function kalatheme_preprocess_html(&$variables) {
   // Load all dependencies.
   require_once DRUPAL_ROOT . '/' . $variables['path_to_kalatheme'] . '/includes/utils.inc';
   _kalatheme_load_dependencies();
+
+  // WEBSPARK-1921 - Security scanners ask that we set has_js to 'secure' and 'httponly'
+  // Ported from https://www.drupal.org/project/drupal/issues/3050444, authorize.inc in Drupal core.
+  if (isset($_COOKIE['has_js']) && $_COOKIE['has_js']) {
+    $secure = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on');
+    setcookie('has_js', 1, NULL, '/', NULL, $secure, TRUE);
+  }
 }
 
 /**
