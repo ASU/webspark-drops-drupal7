@@ -394,6 +394,6 @@ fieldset[disabled] .btn-black {
   }
 }
 // Hide TB Megamenu built-in toggle button
-.tb-megamenu-main-menu > button.btn-navbar.tb-megamenu-button {
+div[class*=tb-megamenu-] > button.btn-navbar.tb-megamenu-button {
   display: none;
 }

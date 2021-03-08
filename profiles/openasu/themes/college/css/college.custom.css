@@ -155,7 +155,7 @@ fieldset[disabled] .btn-black:hover, fieldset[disabled] .btn-black:focus, fields
 
 #tabs .nav.nav-pills > li > a { padding-top: 0.5rem; padding-bottom: 0.5rem; }
 
-.tb-megamenu-main-menu > button.btn-navbar.tb-megamenu-button { display: none; }
+div[class*=tb-megamenu-] > button.btn-navbar.tb-megamenu-button { display: none; }
 
 /* links */
 div.region-content *:not(.btn) > a:not(.btn), div.region-content .ui-widget-content :not(.btn) > a:not(.btn) { border-bottom: 1px solid #8c1d40; text-decoration: none; color: #8c1d40; }
