@@ -79,6 +79,8 @@ sites/default/settings.local.php
 profiles/openasu/modules/**/behat/bin
 profiles/openasu/modules/**/behat/vendor
 profiles/openasu/modules/**/behat/behat.local.yml
+# Webgrind
+webgrin*
 
 # Panopoly core for testing Panopoly
 ######################

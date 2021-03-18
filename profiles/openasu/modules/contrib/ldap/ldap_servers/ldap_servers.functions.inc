@@ -30,7 +30,7 @@ function ldap_password_modify($userdn, $new_password, $ldap_server) {
   $len = drupal_strlen($new_password);
   $new_pass = NULL;
   for ($i = 0; $i < $len; $i++) {
-    $new_pass .= "{$new_password{$i}}\000";
+    $new_pass .= "{$new_password[$i]}\000";
   }
 
   $status = ldap_mod_replace($ldap_server->connection, $userdn, ['unicodePwd' => $new_pass]);
