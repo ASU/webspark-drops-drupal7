@@ -1,6 +1,8 @@
 College (v1.5) - 2021-03-12
 ---------------------------
-Compressed all Bootstrap CSS files for better performance
+- Compressed all Bootstrap CSS files for better performance
+- Default TB Megamenu hamburger button now hidden from all TB Megamenu classes (vs. just the main-menu)
+- Reverted "<img> background styling (shows a gradient when no image is loaded)" regression (in Michigan release)
 
 College (v1.4) - 2021-02-24
 ---------------------------
