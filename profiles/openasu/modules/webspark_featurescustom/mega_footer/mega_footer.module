@@ -86,7 +86,7 @@ function mega_footer_block_view($delta = '') {
           $logo_link_prefix = ($logo_link !== '') ? '<a href="' . $logo_link . '">' : '';
           $logo_link_suffix = ($logo_link !== '') ? '</a>' : '';
           $footer_mark .= ($theme === "_ws2")
-            ? '<div id="mega-footer-logo-wrapper" class="col-md-5 col-sm-12">' . $logo_link_prefix
+            ? '<div id="mega-footer-logo-wrapper" class="col-md-5 col-sm-12 col-xs-12">' . $logo_link_prefix
               . "<img src='$file_url' alt='$alt' />"
               . $logo_link_suffix . "</div>"
             : '<div id="mega-footer-logo-wrapper">' . $logo_link_prefix
@@ -122,7 +122,7 @@ function mega_footer_block_view($delta = '') {
         $icons_markup .= "</ul>";
 
         if ($theme === "_ws2") { // WS2.0 ONLY
-          $footer_mark .= "<div id='mega-footer-social-media' class='col-md-7 col-sm-12'>";
+          $footer_mark .= "<div id='mega-footer-social-media' class='col-md-7 col-sm-12 col-xs-12'>";
           $footer_mark .= "<nav role='navigation' aria-label='Social media'>" . $icons_markup . "</nav>";
           $footer_mark .= "</div>";
         }
