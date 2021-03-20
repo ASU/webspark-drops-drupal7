@@ -1,7 +1,7 @@
 Webspark 1.79.1 (Vulcan), 2021-03-12
 ------------------------------------
 - Webspark core updates
-  * Drupal core - v7.78+patch5
+  * Drupal core - v7.78+patch
     * Added Node.js, Webgrind directories to .gitignore
 
 - Web standards components in Webspark
