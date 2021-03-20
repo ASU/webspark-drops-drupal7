@@ -1,0 +1,26 @@
+diff --git a/ldap_help/ldap_test_script/functions.inc b/ldap_help/ldap_test_script/functions.inc
+index 268e0370f..eb9b75441 100644
+--- a/ldap_help/ldap_test_script/functions.inc
++++ b/ldap_help/ldap_test_script/functions.inc
+@@ -199,7 +199,7 @@ function ldap_help_encodePassword($password) {
+   $password = "\"" . $password . "\"";
+   $encoded = "";
+   for ($i = 0; $i < strlen($password); $i++) {
+-    $encoded .= "{$password{$i}}\000";
++    $encoded .= "{$password[$i]}\000";
+   }
+   return $encoded;
+ }
+diff --git a/ldap_servers/ldap_servers.functions.inc b/ldap_servers/ldap_servers.functions.inc
+index b94bedf68..927bdcb0a 100644
+--- a/ldap_servers/ldap_servers.functions.inc
++++ b/ldap_servers/ldap_servers.functions.inc
+@@ -30,7 +30,7 @@ function ldap_password_modify($userdn, $new_password, $ldap_server) {
+   $len = drupal_strlen($new_password);
+   $new_pass = NULL;
+   for ($i = 0; $i < $len; $i++) {
+-    $new_pass .= "{$new_password{$i}}\000";
++    $new_pass .= "{$new_password[$i]}\000";
+   }
+ 
+   $status = ldap_mod_replace($ldap_server->connection, $userdn, ['unicodePwd' => $new_pass]);

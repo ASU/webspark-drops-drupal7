@@ -4,6 +4,8 @@ ASU Brand module - CHANGELOG
 ------------------
 - Upon logging in, CAS users now return to their last visited page (vs. the default home page).
 - Added configuration to toggle the above described behavior on/off under the WS2.0 Header block settings
+- Site Information admin form link now points at the correct ASU Brand header block (depending on
+  which version of Web standards is currently being used by the theme)
 
 7.x-2.2 2021-02-24
 ------------------

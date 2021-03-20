@@ -1,23 +1,35 @@
 Webspark 1.79.1 (Vulcan), 2021-03-12
 ------------------------------------
 - Webspark core updates
-  * Drupal core - v7.78+patch5
-    * Added Node.js files to .gitignore
+  * Drupal core - v7.78+patch
+    * Added Node.js, Webgrind directories to .gitignore
 
 - Web standards components in Webspark
 
   * ASU Brand (asu_brand) - v2.3
-    - Upon logging in, CAS users now return to their last visited page (vs. the default home page).
-    - Added configuration to toggle the above described behavior on/off under the WS2.0 Header block settings
+    - Upon logging in, CAS users now return to their last visited page (vs. the default home page)
+    - Added configuration to toggle the above described behavior on/off under the WS2.0 Header block
+      settings
+    - Site Information admin form link now points at the correct ASU Brand header block (depending on
+      which version of Web standards is currently being used by the theme)
   * College (college) - v1.5
     - Compressed all Bootstrap CSS files for better performance
+    - Default TB Megamenu hamburger button now hidden from all TB Megamenu classes (vs. just the main-menu)
+    - Reverted "<img> background styling (shows a gradient when no image is loaded)" regression (in
+      Michigan release)
+  * Mega Footer (mega_footer) - v2.3
+    - The ASU megafooter logo no longer appears under the social media icons on smaller screen sizes (xs)
+      [credit: Robert Leblanc]
 
 - Contrib project updates
 
   - Managed by Webspark
+    - LDAP (ldap_*) - v2.5+patch1
+      - Patched ldap_help, ldap_servers modules to make them work with PHP 7.4
     - Kalatheme (kalatheme) - v3.0-rc2+patch7
       - Permanently resolved has_js notices in security scan reports
-      - Now checks for WS2.0 themes to get correct location of Bootstrap files to correctly count the number of columns and resolve a Views Grid layout issue
+      - Now checks for WS2.0 themes to get correct location of Bootstrap files to correctly count the
+        number of columns and resolve a Views Grid layout issue
 
 Webspark 1.79 (Michigan), 2021-02-24
 ------------------------------------
