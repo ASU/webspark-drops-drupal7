@@ -2,11 +2,13 @@
 
 // Transitions for hover/focus
 @mixin ws2-element-transition-global() {
+  -webkit-transition: all 0.5s cubic-bezier(.19, 1, .19, 1) 0s;
   transition: all 0.5s cubic-bezier(.19, 1, .19, 1) 0s;
 }
 // Transitions for hover/focus
 @mixin ws2-element-transition-button() {
-  transition: .1s ease-out;
+  -webkit-transition: 0.1s ease-out;
+  transition: 0.1s ease-out;
 }
 
 // Accessibility borders on focus
