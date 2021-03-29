@@ -79,7 +79,7 @@ html.js .pia.page-admin-modules .module-filter-inputs-wrapper .module-filter-cle
 
 #top-content #tabs .nav-pills { padding: 0.5rem; background-color: #e8e8e8; /* dropdown items from nav pills */ }
 #top-content #tabs .nav-pills li { padding-right: 0.5rem; }
-#top-content #tabs .nav-pills li a { transition: .1s ease-out; background-color: #fafafa; }
+#top-content #tabs .nav-pills li a { -webkit-transition: 0.1s ease-out; transition: 0.1s ease-out; background-color: #fafafa; }
 #top-content #tabs .nav-pills li a:hover { transform: scale(1.1); }
 #top-content #tabs .nav-pills li a.active:hover { color: #fafafa; }
 #top-content #tabs .nav-pills > li.active > a, #top-content #tabs .nav-pills > li.active > a:hover, #top-content #tabs .nav-pills > li.active > a:focus { background-color: #8c1d40; }

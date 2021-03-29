@@ -33,7 +33,7 @@ div.error label { padding-left: 2em; }
 /* buttons */
 /* =BUTTONS --- WS2.0 DONE
 -------------------------------------------------------------- */
-button, .button, .btn, a.btn, .btn > a { transition: .1s ease-out; word-wrap: break-word; }
+button, .button, .btn, a.btn, .btn > a { -webkit-transition: 0.1s ease-out; transition: 0.1s ease-out; word-wrap: break-word; }
 button:hover, .button:hover, .btn:hover, a.btn:hover, .btn > a:hover { border-bottom: transparent; text-decoration: none; }
 
 .btn, .pane-menu-tree .menu-block-wrapper ul.menu li a.btn-pane-menu-tree { -moz-user-select: none; background-image: none; border: 1px solid transparent; border-radius: 32px; cursor: pointer; display: inline-block; font-size: 1rem; font-weight: bold; line-height: 1rem; margin-bottom: 0; min-width: 5rem; padding: 1rem 2rem; text-align: center; vertical-align: middle; white-space: nowrap; }
@@ -247,12 +247,12 @@ img.img-testimonial-small { clip-path: circle(90px); }
 
 /* -- ordered + unordered lists - Turning off temporarily
 -------------------------------------------------------------- */
-div.region-content ul { padding-left: 1em; }
-div.region-content ol { padding-left: 1.5em; }
-div.region-content ul li, div.region-content ol li { margin-bottom: 2em; }
+div.region-content ul { padding-left: 1rem; }
+div.region-content ol { padding-left: 1.5rem; }
+div.region-content ul li, div.region-content ol li { margin-bottom: 1rem; }
 div.region-content ul li:before, div.region-content ol li:before { font-weight: bolder; vertical-align: middle; }
 div.region-content ul li:last-child, div.region-content ol li:last-child { padding-bottom: 0; }
-div.region-content ul > li > ul, div.region-content ul > li > ol, div.region-content ul > ul, div.region-content ul > ol, div.region-content ol > li > ul, div.region-content ol > li > ol, div.region-content ol > ul, div.region-content ol > ol { padding-left: 2em; }
+div.region-content ul > li > ul, div.region-content ul > li > ol, div.region-content ul > ul, div.region-content ul > ol, div.region-content ol > li > ul, div.region-content ol > li > ol, div.region-content ol > ul, div.region-content ol > ol { padding-left: 1.5rem; }
 div.region-content ol { list-style-type: decimal; }
 div.region-content ol > ol, div.region-content ol > li > ol { list-style-type: lower-alpha; }
 div.region-content ol > ol > ol, div.region-content ol > ol > li > ol, div.region-content ol > li > ol > ol, div.region-content ol > li > ol > li > ol { list-style-type: upper-roman; }
@@ -480,7 +480,7 @@ div.region-content .ws2-element-alt.ws2-element-alt-white .ws2-element-style.btn
 
 #asu_hdr #asu_universal_nav_new .icn { box-sizing: content-box; }
 
-.header__sitename { color: #191919; font-weight: bold; font-size: 1.5em; line-height: 1; letter-spacing: -0.5px; margin-top: 0; margin-bottom: 0; padding: 0 0 0.75rem 0.75rem; white-space: nowrap; overflow: hidden; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; }
+.header__sitename { color: #191919; font-weight: bold; font-size: 1.5em; line-height: 1; letter-spacing: -0.5px; margin-top: 0; margin-bottom: 0; padding: 0 0 0.75rem 0.75rem; white-space: nowrap; overflow: hidden; -webkit-transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; }
 .header__sitename.element-invisible { white-space: inherit; }
 .header__sitename a { color: #191919; }
 
