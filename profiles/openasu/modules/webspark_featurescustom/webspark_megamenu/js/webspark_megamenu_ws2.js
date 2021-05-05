@@ -5,7 +5,7 @@
    */
   Drupal.behaviors.webspark_megamenu_hidden = { // jshint ignore:line
     attach: function(context, settings) { // jshint ignore:line
-      var tb_block = $(".tb-megamenu-block.tb-block.tb-megamenu-block");
+      var tb_block = $(".tb-megamenu-block.tb-block.tb-megamenu-block", context);
       if (tb_block.length) {
         tb_block.closest(".tb-megamenu-row.row-fluid").addClass("hide-extra-padding");
         tb_block.closest(".tb-megamenu-block.tb-block.tb-megamenu-block").addClass("adding-padding");
@@ -20,14 +20,14 @@
   Drupal.behaviors.webspark_resize_menu = { // jshint ignore:line
     attach: function(context, settings) { // jshint ignore:line
 
-  /**
-   * Recalculates padding, font size, etc.??
-   * @param t - (int) sum of pixel widths of all items in the navbar
-   * @param x - (int) pixel width of $("#ASUNavMenu .container .navbar-collapse")
-   * @param count - (int) number of elements in a (jQuery collection below)
-   * @param a - (obj) jQuery collection of menu items
-   * @returns {{mrg: number, fs: number, pds: string, subfs: string}}
-   */
+      /**
+       * Recalculates padding, font size, etc.??
+       * @param t - (int) sum of pixel widths of all items in the navbar
+       * @param x - (int) pixel width of $("#ASUNavMenu .container .navbar-collapse")
+       * @param count - (int) number of elements in a (jQuery collection below)
+       * @param a - (obj) jQuery collection of menu items
+       * @returns {{mrg: number, fs: number, pds: string, subfs: string}}
+       */
       function calcFits(t, x, count, a) {
         var possTextWidths = [];
         var objs = [{
@@ -48,15 +48,12 @@
         }];
 
         var megamenu = document.getElementsByClassName("tb-megamenu-nav")[0].children;
-        var chevron = document.getElementsByClassName("fa-chevron-down");
-
+        var chevron = document.getElementsByClassName("fa fa-chevron-down");
+        var chevronPadd = 8; // Manually set padding width
+        var chevronTotal = 0;
         if (chevron.length > 0) {
-          var chevronParent = chevron[0].parentElement;
           var chevronWidth = chevron[0].clientWidth;
-//        var chevronPadd = window.getComputedStyle(chevronParent).paddingRight;
-          var chevronPadd = 8;
           // Calculate Chevrons net width
-          var chevronTotal = 0;
           var chevronPadTotal = chevronWidth + chevronPadd; //DEFAULT 12px width + 0.5rem padding
           if (megamenu.length > 0) {
             chevronTotal = chevron.length * chevronPadTotal;
@@ -103,12 +100,12 @@
         }
       }
 
-  /**
-   * Calculate the total text width
-   * @param text
-   * @param font
-   * @returns {*}
-   */
+      /**
+       * Calculate the total text width
+       * @param text
+       * @param font
+       * @returns {*}
+       */
       $.fn.textWidth = function(text, font) {
         if (!$.fn.textWidth.fakeEl) {
           $.fn.textWidth.fakeEl = $("<span>").hide().appendTo(document.body);
@@ -118,7 +115,7 @@
       };
 
       // Calculates the proper font size and padding to top-level links and buttons.
-      var ASUNavMenu = $("#ASUNavMenu");
+      var ASUNavMenu = $("#ASUNavMenu", context);
       if (ASUNavMenu.length) {
         $(window).on("resize load", function() {
           if (window.innerWidth > 991) {
@@ -135,24 +132,24 @@
             // Apply styling on background if necessary
             var check = $("#ASUNavMenu li.tb-megamenu-item.level-1.mega.mega-align-justify.dropdown")
               .children(".tb-megamenu-submenu");
-              if (check.length > 0) {
-                for (var cnt = 0; cnt < check.length; cnt++) {
-                  var tbShell = document.getElementById("tb-megamenu-ws2-shell").offsetWidth; // 1140px max-width
-                  var LHSpacing = (window.innerWidth - tbShell) / 2;
-                  var subMenu = check[cnt].firstElementChild;
-                  // subMenu.style.backgroundColor = "blue";
-                  var subMenuWidth = subMenu.offsetWidth;
-                  var RHSpacing = window.innerWidth - LHSpacing - subMenuWidth;
-                  /*
-                  1 - left margin = innerWidth - tbShell
-                  2 - RH margin = innerWidth - left Margin - submenuwidth
-                   */
-                  // check[cnt].style.backgroundColor = "aqua";
-                  check[cnt].style.marginLeft = ((-1 * LHSpacing - 6) + "px"); // Mystery 6px????
-                  check[cnt].style.paddingLeft = LHSpacing + "px";
-                  check[cnt].style.paddingRight = RHSpacing + "px";
-                }
+            if (check.length > 0) {
+              for (var cnt = 0; cnt < check.length; cnt++) {
+                var tbShell = document.getElementById("tb-megamenu-ws2-shell").offsetWidth; // 1140px max-width
+                var LHSpacing = (window.innerWidth - tbShell) / 2;
+                var subMenu = check[cnt].firstElementChild;
+                // subMenu.style.backgroundColor = "blue";
+                var subMenuWidth = subMenu.offsetWidth;
+                var RHSpacing = window.innerWidth - LHSpacing - subMenuWidth;
+                /*
+                1 - left margin = innerWidth - tbShell
+                2 - RH margin = innerWidth - left Margin - submenuwidth
+                 */
+                // check[cnt].style.backgroundColor = "aqua";
+                check[cnt].style.marginLeft = ((-1 * LHSpacing - 6) + "px"); // Mystery 6px????
+                check[cnt].style.paddingLeft = LHSpacing + "px";
+                check[cnt].style.paddingRight = RHSpacing + "px";
               }
+            }
 
             var data = calcFits(t, x, count, a);
             // Restyle top-level non-button menu items
@@ -226,7 +223,7 @@
    */
   Drupal.behaviors.webspark_megamenu_accessible = { // jshint ignore:line
     attach: function(context, settings) { // jshint ignore:line
-      $(".navmenu a").unbind().each(function() {
+      $(".navmenu a", context).unbind().each(function() {
         $(this).unbind().on("keydown", function(e) {
           // On keydown tab (no shift)
           if (e.keyCode === 9 && !e.shiftKey) {
@@ -243,7 +240,7 @@
                 } else {
                   $("#page-footer").find(":focusable")[0].focus();
                 }
-              // Anchor tag's parent is not the last element of top level elements
+                // Anchor tag's parent is not the last element of top level elements
               } else {
                 e.preventDefault();
                 $(this).parent().addClass("open");
@@ -259,7 +256,7 @@
               if ($(this).parent().is(":first-child")) {
                 $(this).parent().removeClass("open");
                 $("#asu_universal_nav").find("li:last-child").children("a").focus();
-              // Anchor tag's parent is not the first element of top level elements
+                // Anchor tag's parent is not the first element of top level elements
               } else {
                 e.preventDefault();
                 $(this).parent().addClass("open");
@@ -279,7 +276,7 @@
                   $(this).addClass("last-tb-focus").closest(".tb-megamenu-item.level-1").find(".tb-megamenu-block .menu-link-button").focus();
                   // Prevent tabbing
                   return;
-                // Else if there is no level 3 then return (there are no level 3 children)
+                  // Else if there is no level 3 then return (there are no level 3 children)
                 } else if ($(this).parent(".level-3").length === 0 && $(this).parents(".tb-megamenu-item.level-2").find(".level-3").length === 0) {
                   return;
                 }
@@ -304,7 +301,7 @@
                   $(this).addClass("last-tb-focus").closest(".tb-megamenu-item.level-1").find(".tb-megamenu-block .menu-link-button").focus();
                   // Prevent tabbing
                   return;
-                // Else if there is no level 3 then return (there are no level 3 children)
+                  // Else if there is no level 3 then return (there are no level 3 children)
                 } else if ($(this).parent(".level-3").length === 0 && $(this).parents(".tb-megamenu-item.level-2").find(".level-3").length === 0) {
                   return;
                 }
@@ -320,7 +317,7 @@
               if ($(this).parent().is(":first-child")) {
                 $(this).parent().removeClass("open");
                 $("#asu_universal_nav").find("li:last-child").children("a").focus();
-              // Anchor tag's parent is not the first element of top level elements
+                // Anchor tag's parent is not the first element of top level elements
               } else {
                 e.preventDefault();
                 $(this).parent().addClass("open");

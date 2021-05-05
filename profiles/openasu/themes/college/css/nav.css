@@ -63,11 +63,11 @@ ul.quicktabs-tabs.quicktabs-style-asu-web-standards li a { color: #191919; }
 
 /* fixes for stacked tabs */
 #content .ui-tabs .ui-tabs-nav li { border: none; }
-#content .ui-tabs .ui-tabs-nav li a { border: none; color: #191919; font-weight: bold; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; }
+#content .ui-tabs .ui-tabs-nav li a { border: none; color: #191919; font-weight: bold; -webkit-transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; }
 #content .ui-tabs .ui-tabs-nav li a:focus { outline: none; }
-#content .ui-tabs .ui-tabs-nav li a:after { content: ''; position: absolute; display: block; height: 0.5rem; background-color: #8c1d40; width: 0; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; bottom: 0; left: -0.5rem; margin-left: 0.5rem; }
-#content .ui-tabs .ui-tabs-nav li:hover a { color: #8c1d40; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; }
-#content .ui-tabs .ui-tabs-nav li:hover a:after { width: 100%; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; }
+#content .ui-tabs .ui-tabs-nav li a:after { content: ''; position: absolute; display: block; height: 0.5rem; background-color: #8c1d40; width: 0; -webkit-transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; bottom: 0; left: -0.5rem; margin-left: 0.5rem; }
+#content .ui-tabs .ui-tabs-nav li:hover a { color: #8c1d40; -webkit-transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; }
+#content .ui-tabs .ui-tabs-nav li:hover a:after { width: 100%; -webkit-transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; transition: all 0.5s cubic-bezier(0.19, 1, 0.19, 1) 0s; }
 #content .ui-tabs .ui-tabs-nav li:before { content: ''; }
 #content .ui-tabs .ui-tabs-nav li.ui-state-active a { color: #8c1d40; }
 #content .ui-tabs .ui-tabs-nav li.ui-state-active a:after { width: 100%; }

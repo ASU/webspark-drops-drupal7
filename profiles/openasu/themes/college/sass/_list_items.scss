@@ -26,14 +26,14 @@ img.img-testimonial-small {
 #{$ws2-content-styles-container} {
   // #1 Global list item css (non-WS2.0)
   ul {
-    padding-left: 1em;
+    padding-left: 1rem;
   }
   ol {
-    padding-left: 1.5em;
+    padding-left: 1.5rem;
   }
   ul, ol {
     li {
-      margin-bottom: 2em;
+      margin-bottom: 1rem;
       &:before {
         font-weight: bolder;
         vertical-align: middle;
@@ -47,7 +47,7 @@ img.img-testimonial-small {
     & > li > ol,
     & > ul,
     & > ol {
-      padding-left: 2em;
+      padding-left: 1.5rem;
     }
   }
   // More nested list properties

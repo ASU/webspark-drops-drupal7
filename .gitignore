@@ -89,3 +89,7 @@ profiles/panopoly
 # Node.js generated files
 ######################
 node_modules
+
+# Codekit
+######################
+config.codekit3
