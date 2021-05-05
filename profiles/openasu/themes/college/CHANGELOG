@@ -1,3 +1,8 @@
+College (v1.6) - 2021-05-05
+---------------------------
+- <li> bottom margin switched to rem units for more consistent WS2.0 compliance
+- Added -webkit-transition alternative to College theme mixin for CSS transitions
+
 College (v1.5) - 2021-03-12
 ---------------------------
 - Compressed all Bootstrap CSS files for better performance

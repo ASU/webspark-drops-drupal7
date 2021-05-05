@@ -1,3 +1,18 @@
+Webspark 1.79.2 (Marquette), 2021-05-05
+---------------------------------------
+- Webspark core updates
+  * Drupal core - v7.80+patch
+    - SECURITY UPDATE. For more information, see https://www.drupal.org/project/drupal/releases/7.80
+    - Added CodeKit config file to .gitignore
+
+- Web standards components in Webspark
+
+  * Webspark Megamenu (webspark_megamenu) - v2.2
+    - Fixed font size issues
+  * College (college) - v1.6
+    - <li> bottom margin switched to rem units for more consistent WS2.0 compliance
+    - Added -webkit-transition alternative to College theme mixin for CSS transitions
+
 Webspark 1.79.1 (Vulcan), 2021-03-12
 ------------------------------------
 - Webspark core updates
