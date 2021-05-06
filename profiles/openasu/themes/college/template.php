@@ -74,7 +74,7 @@ function college_preprocess_html(&$variables) {
       '#tag' => 'meta',
       '#attributes' => array(
         // Don't forget to update openasu.info as well!!
-        'content' => 'Webspark:1.79.1 (Vulcan)',
+        'content' => 'Webspark:1.79.2 (Marquette)',
         'http-equiv' => 'X-Name-of-Distro',
         'name' => 'cmsversion',
       )
