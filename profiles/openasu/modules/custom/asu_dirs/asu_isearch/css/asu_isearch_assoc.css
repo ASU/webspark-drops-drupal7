@@ -66,6 +66,7 @@ Accordion
     left: -5px;
     padding-right: 10px;
     content: "\25BE";
+  border-bottom: 2px solid white;
 }
 
 .accordion-toggle.collapsed:before {
