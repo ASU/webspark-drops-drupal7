@@ -1,3 +1,16 @@
+Webspark 1.79.3 (Slapdash), 2021-08-16
+---------------------------------------
+- Web standards components in Webspark
+
+  * WS2.0 Banners (ws2_banner) - v1.1
+    - Banners can now be created in blocks for global deployment (vs. single pages)
+
+- Custom Webspark project updates
+
+  * ASU Local iSearch Directory (asu_isearch) - v1.15
+    - Removed Verdana font for better readability
+    - Removed/concealed red bottom border of links at accordion toggle gaps
+
 Webspark 1.79.2 (Marquette), 2021-05-05
 ---------------------------------------
 - Webspark core updates

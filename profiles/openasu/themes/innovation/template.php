@@ -60,7 +60,7 @@ function innovation_preprocess_html(&$variables) {
       '#tag' => 'meta',
       '#attributes' => array(
         // Don't forget to update openasu.info as well!!
-        'content' => 'Webspark:1.79.2 (Marquette)',
+        'content' => 'Webspark:1.79.3 (Slapdash)',
         'http-equiv' => 'X-Name-of-Distro',
         'name' => 'cmsversion',
       )
