@@ -10,7 +10,7 @@
 }
 
 .view-id-isearch_affiliations h4.panel-title .accordion-toggle {
-    font-family: Verdana, Arial, sans-serif;
+    font-family: Arial, Helvetica, "Nimbus Sans L", "Liberation Sans", FreeSans, sans-serif;
     font-size: 1.1em;
     font-weight: bold;
     color: #212121;
@@ -66,6 +66,7 @@ Accordion
     left: -5px;
     padding-right: 10px;
     content: "\25BE";
+  border-bottom: 2px solid white;
 }
 
 .accordion-toggle.collapsed:before {
